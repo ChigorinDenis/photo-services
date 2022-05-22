@@ -1,11 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
-// import taskReducer from './reducers/taskReducer.js';
+import employeeReducer from './reducers/employeeReducer.js';
 import authReducer from './reducers/authReducer.js';
-// import searchReducer from './reducers/searchReducer.js'
+import uiReducer from './reducers/uiReducer.js';
+import stockReducer from './reducers/stockReducer.js';
+
 
 const store = configureStore({
   reducer: {
-    auth: authReducer
+    auth: authReducer,
+    ui: uiReducer,
+    employee: employeeReducer,
+    stock: stockReducer
   },
 });
 

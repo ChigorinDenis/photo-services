@@ -18,6 +18,9 @@ const theme = createTheme({
     secondary: {
       main: '#039be5',
     },
+    info: {
+      main: '#388e3c'
+    }
   },
 });
 
@@ -26,8 +29,8 @@ export default () => {
     <ThemeProvider theme={theme}>
       <Header />
       <Routes>
-        <Route path='/' element={<ClientPage />}></Route>
-        <Route path='/admin' element={<AdminPage />}></Route>
+        {/* <Route path='/' element={<ClientPage />}></Route> */}
+        <Route path='/' element={<AdminPage />}></Route>
         <Route path='/portfolio' element={<PortfolioPage />}></Route>
         <Route path='/login' element={<SignIn />}></Route>
         <Route

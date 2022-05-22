@@ -1,10 +1,12 @@
-// const cors = 'https://cors-anywhere.herokuapp.com';
-const cors = 'https://cors-anywhere-venky.herokuapp.com';
-const host = 'www.metaweather.com';
-const prefix = 'api/location';
+const host = 'http://localhost:8080';
+const prefix = 'constructor';
 
-export default {
-  location: (latt, long) => [cors, host, prefix, 'search', `?lattlong=${latt},${long}`].join('/'),
-  weather: (woeid) => [cors, host, prefix, woeid].join('/'),
-  search: (str) => [cors, host, prefix, 'search', `?query=${str}`].join('/'),
+export default (name) => {
+  const paths = {
+    getEmployees: [host, 'admin', 'sotrudnik', 'all'].join('/'),
+    addEmployee: [host, 'admin', 'sotrudnik', 'add'].join('/'),
+    getStock: [host, 'sklad', 'all'].join('/'),
+    addEmployee: [host, 'sklad', 'add-new-item'].join('/')
+  }
+  return paths[name];
 };
