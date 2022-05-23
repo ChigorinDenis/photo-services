@@ -6,7 +6,7 @@ export default (name) => {
     getEmployees: [host, 'admin', 'sotrudnik', 'all'].join('/'),
     addEmployee: [host, 'admin', 'sotrudnik', 'add'].join('/'),
     getStock: [host, 'sklad', 'all'].join('/'),
-    addEmployee: [host, 'sklad', 'add-new-item'].join('/')
+    addStock: [host, 'sklad', 'add-new-item'].join('/'),
   }
   return paths[name];
 };

@@ -51,19 +51,14 @@ export default function FullWidthTabs() {
   const theme = useTheme();
   const dispatch = useDispatch();
   const [value, setValue] = React.useState(0);
-   const handleChange = (event, newValue) => {
+   const handleChange = (event, newValue = 0) => {
     const indexToTabname = {
       0: 'employee',
       1: 'stock'
     }
     setValue(newValue);
-    const tabname = indexToTabname[newValue]
+    const tabname = indexToTabname[newValue];
     dispatch(changeTabname(tabname));
-  };
-
-  const handleChangeIndex = (index) => {
-    setValue(index);
-    
   };
 
   return (
@@ -80,11 +75,6 @@ export default function FullWidthTabs() {
           <Tab label="Клиенты" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
-      <SwipeableViews
-        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-        index={value}
-        onChangeIndex={handleChangeIndex}
-      >
         <TabPanel value={value} index={0} dir={theme.direction}>
           <EmployeesLayout />
         </TabPanel>
@@ -94,7 +84,6 @@ export default function FullWidthTabs() {
         <TabPanel value={value} index={2} dir={theme.direction}>
           Item Three
         </TabPanel>
-      </SwipeableViews>
       <AddEmployeeForm />
       <AddStockForm />
     </Box>

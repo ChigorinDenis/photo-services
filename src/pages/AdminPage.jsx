@@ -12,12 +12,7 @@ const AdminPage = () => {
   const dispatch = useDispatch();
   const { activeTabname } = useSelector((state) => state.ui);
   const handleOpenDialog = () => {
-    const tabnameToDialog = {
-      'employee':'addEmployeeForm',
-      'stock': 'addStockForm'
-    }
-    const tabname = tabnameToDialog[activeTabname]
-    dispatch(openDialog(tabname));
+    dispatch(openDialog(activeTabname));
   }
   return (
     <>

@@ -2,10 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   dialogs: {
-    addEmployeeForm: false,
-    addStockForm: false
+    employee: false,
+    stock: false
   },
-  activeTabname: 'addEmployeeForm',
+  activeTabname: 'employee',
 };
 
 export const uiSlice = createSlice({

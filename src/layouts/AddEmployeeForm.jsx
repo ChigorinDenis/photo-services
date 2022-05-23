@@ -29,7 +29,7 @@ function AddEmployeeForm(props) {
   };
 
   const handleClose = () => {
-    dispatch(closeDialog('addEmployeeForm'));
+    dispatch(closeDialog('employee'));
   };
 
   const handleSubmit = async (event) => {
@@ -53,7 +53,7 @@ function AddEmployeeForm(props) {
     handleClose();
   };
   return (
-    <Dialog onClose={handleClose} open={ui.dialogs['addEmployeeForm']}>
+    <Dialog onClose={handleClose} open={ui.dialogs['employee']}>
       <DialogTitle>Добавить Сотрудника</DialogTitle>
       <Container component="main" maxWidth="xs">
         <CssBaseline />

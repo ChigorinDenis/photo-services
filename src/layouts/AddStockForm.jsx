@@ -14,46 +14,43 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import routes from '../routes';
-import { employeeAdd } from '../reducers/employeeReducer';
+import { stockItemAdd } from '../reducers/stockReducer';
 import { closeDialog } from '../reducers/uiReducer'
 
 
 function AddStockForm(props) {
   const dispatch = useDispatch()
   const ui = useSelector((state) => state.ui);
-  const [post, setPost] = React.useState('');
-  
 
   const handleChange = (event) => {
     setPost(event.target.value);
   };
 
   const handleClose = () => {
-    dispatch(closeDialog('addEmployeeForm'));
+    dispatch(closeDialog('stock'));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const user = {
-      fio: data.get('fio'),
-      username: data.get('username'),
-      post,
-      phone: data.get('phone'),
-      oklad: data.get('oklad'),
-      premiya: data.get('premiya'),
+      name: data.get('name'),
+      type: data.get('type'),
+      units: data.get('units'),
+      number: data.get('number'),
+      price: data.get('price'),
     };
-    const url = routes('addEmployee');
+    const url = routes('addStock');
     try {
       const response = await axios.post(url, user);
-      dispatch(employeeAdd(response.data));
+      dispatch(stockItemAdd(response.data));
     } catch (error) {
       console.log(error)
     }
     handleClose();
   };
   return (
-    <Dialog onClose={handleClose} open={ui.dialogs['addStockForm']}>
+    <Dialog onClose={handleClose} open={ui.dialogs['stock']}>
       <DialogTitle>Добавить Материал</DialogTitle>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -71,59 +68,41 @@ function AddStockForm(props) {
                 <TextField
                   required
                   fullWidth
-                  label="ФИО"
-                  name="fio"
+                  label="Название"
+                  name="name"
                 />
               </Grid>
               <Grid item xs={6}>
                 <TextField
                   required
                   fullWidth
-                  label="Имя пользователя"
-                  name="username"
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <FormControl fullWidth>
-                  <InputLabel id="add-post-select-label">Должность</InputLabel>
-                  <Select
-                    labelId="add-post-select-label"
-                    id="add-post-select"
-                    value={post}
-                    label="Должность"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value={'Менеджер'}>Менеджер</MenuItem>
-                    <MenuItem value={'Фотограф'}>Фотограф</MenuItem>
-                    <MenuItem value={'Редактор'}>Редактор</MenuItem>
-                    <MenuItem value={'Печатник'}>Печатник</MenuItem>
-                    <MenuItem value={'Корректор'}>Корректор</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  label="Телефон"
-                  name="phone"
-                  type={'tel'}
+                  label="Тип"
+                  name="type"
                 />
               </Grid>
               <Grid item xs={6}>
                 <TextField
                   required
                   fullWidth
-                  label="Оклад"
-                  name="oklad"
+                  label="Количество"
+                  name="number"
+                  type='number'
                 />
               </Grid>
               <Grid item xs={6}>
                 <TextField
                   required
                   fullWidth
-                  label="Премия"
-                  name="premiya"
+                  label="Ед. измерения"
+                  name="units"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  required
+                  fullWidth
+                  label="Цена"
+                  name="price"
                 />
               </Grid>
               

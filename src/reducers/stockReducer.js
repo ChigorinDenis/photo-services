@@ -6,12 +6,15 @@ export const stockSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    stockAdd: (state, { payload }) => {
+    stockAllAdd: (state, { payload }) => {
       return [...payload];
+    },
+    stockItemAdd: (state, { payload }) => {
+      return [...state, payload];
     },
   }
 });
 
-export const { stockAdd } = stockSlice.actions;
+export const { stockAllAdd, stockItemAdd } = stockSlice.actions;
 
 export default stockSlice.reducer;

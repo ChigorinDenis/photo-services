@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import DataTable from '../components/DataTable';
-import { stockAdd } from '../reducers/stockReducer';
+import { stockAllAdd } from '../reducers/stockReducer';
 import routes from '../routes';
 
 const columns = [
@@ -21,7 +21,7 @@ const StockLayout = () => {
     const fetchData = async () => {
       try {   
         const response = await axios.get(routes('getStock'));    
-        dispatch(stockAdd(response.data))
+        dispatch(stockAllAdd(response.data))
       } catch(err) {    
         console.log(err);
       }
