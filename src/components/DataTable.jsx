@@ -30,7 +30,6 @@ export default function DataTable(props) {
         rows={rows}
         columns={columns}
         localeText={ruRU.components.MuiDataGrid.defaultProps.localeText}
-        checkboxSelection
         components={{
           Toolbar: GridToolbar,
         }}

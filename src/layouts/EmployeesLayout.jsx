@@ -5,19 +5,35 @@ import DataTable from '../components/DataTable';
 import Avatar from '@mui/material/Avatar';
 import { employeesAdd } from '../reducers/employeeReducer';
 import routes from '../routes';
+import IconButton from '@mui/material/IconButton';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 const columns = [
-  { field: 'id', headerName: 'id', width: 150 },
-  { field: 'username', headerName: 'Имя пользователя', width: 150 },
-  { field: 'fio', headerName: 'ФИО', width: 150 },
+  { field: 'id', headerName: 'id', width: 50 },
+  { field: 'username', headerName: 'Пользователь', width: 200, renderCell: (params)=> {
+    return (
+      <>
+        <Avatar
+          alt={params.row.username}
+          src={`http://localhost:8080${params.row.avatarImagePath}`}
+          sx={{mr:2}}
+        />
+        <span>{params.row.username}</span>
+      </>
+    ) }},
+  { field: 'fio', headerName: 'ФИО', width: 300 },
   { field: 'post', headerName: 'Должность', width: 150 },
   { field: 'phone', headerName: 'Номер телефона', width: 150 },
   { field: 'oklad', headerName: 'Оклад', width: 150 },
   { field: 'premiya', headerName: 'Премия', width: 150 },
-  { field: 'avatarImagePath', headerName: 'Ава', width: 150, renderCell: (params)=> {
+  { field: 'control', headerName: '', width: 150, renderCell: (params) => {
     return (
-        <Avatar alt="Remy Sharp" src={`http://localhost:8080${params.row.avatarImagePath}`} />
-      ) }},
+      <IconButton color='secondary'>
+        <CalendarMonthIcon />
+      </IconButton>
+    )
+  } },
+  
 ];
 
 const EmployeesLayout = () => {
