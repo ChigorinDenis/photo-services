@@ -12,6 +12,7 @@ import EmployeesLayout from '../layouts/EmployeesLayout';
 import StockLayout from '../layouts/StockLayout';
 import AddEmployeeForm from '../layouts/AddEmployeeForm';
 import AddStockForm from '../layouts/AddStockForm';
+import OrdersLayout from '../layouts/OrdersLayout';
 import { changeTabname } from '../reducers/uiReducer'
 import { employeeAdd } from '../reducers/employeeReducer';
 
@@ -72,7 +73,7 @@ export default function FullWidthTabs() {
         >
           <Tab label="Сотрудники" {...a11yProps('employee')} />
           <Tab label="Склад" {...a11yProps('stock')} />
-          <Tab label="Клиенты" {...a11yProps(2)} />
+          <Tab label="Заказы" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
         <TabPanel value={value} index={0} dir={theme.direction}>
@@ -82,7 +83,7 @@ export default function FullWidthTabs() {
           <StockLayout />
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
-          Item Three
+          <OrdersLayout />
         </TabPanel>
       <AddEmployeeForm />
       <AddStockForm />

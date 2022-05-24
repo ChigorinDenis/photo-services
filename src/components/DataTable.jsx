@@ -30,6 +30,7 @@ export default function DataTable(props) {
         rows={rows}
         columns={columns}
         localeText={ruRU.components.MuiDataGrid.defaultProps.localeText}
+        expandableRows={true}
         components={{
           Toolbar: GridToolbar,
         }}
