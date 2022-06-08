@@ -1,6 +1,7 @@
-import * as React from 'react';
+import  React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import SwipeableViews from 'react-swipeable-views';
 import { useTheme } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -13,8 +14,11 @@ import StockLayout from '../layouts/StockLayout';
 import AddEmployeeForm from '../layouts/AddEmployeeForm';
 import AddStockForm from '../layouts/AddStockForm';
 import OrdersLayout from '../layouts/OrdersLayout';
+import ServiceLayout from '../layouts/ServiceLayout';
 import { changeTabname } from '../reducers/uiReducer'
 import { employeeAdd } from '../reducers/employeeReducer';
+import { stockAllAdd } from '../reducers/stockReducer';
+import routes from '../routes';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -49,13 +53,27 @@ function a11yProps(index) {
 }
 
 export default function FullWidthTabs() {
-  const theme = useTheme();
   const dispatch = useDispatch();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {   
+        const response = await axios.get(routes('getStock'));    
+        dispatch(stockAllAdd(response.data))
+      } catch(err) {    
+        console.log(err);
+      }
+    }
+   fetchData();
+  }, []);
+
+  const theme = useTheme();
+  
   const [value, setValue] = React.useState(0);
    const handleChange = (event, newValue = 0) => {
     const indexToTabname = {
       0: 'employee',
-      1: 'stock'
+      1: 'stock',
+      2: 'service',
     }
     setValue(newValue);
     const tabname = indexToTabname[newValue];
@@ -73,8 +91,10 @@ export default function FullWidthTabs() {
         >
           <Tab label="Сотрудники" {...a11yProps('employee')} />
           <Tab label="Склад" {...a11yProps('stock')} />
-          <Tab label="Заказы" {...a11yProps(2)} />
+          <Tab label="Услуги" {...a11yProps('service')} />
+          <Tab label="Заказы" {...a11yProps('order')} />
         </Tabs>
+        
       </AppBar>
         <TabPanel value={value} index={0} dir={theme.direction}>
           <EmployeesLayout />
@@ -83,6 +103,9 @@ export default function FullWidthTabs() {
           <StockLayout />
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
+          <ServiceLayout />
+        </TabPanel>
+        <TabPanel value={value} index={3} dir={theme.direction}>
           <OrdersLayout />
         </TabPanel>
       <AddEmployeeForm />

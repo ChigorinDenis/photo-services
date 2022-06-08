@@ -1,41 +1,44 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
+import  Link  from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import routes from '../routes';
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+
 
 const theme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
+  const navigate = useNavigate();
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
+    const url = routes('registration');
+    const user = {
+      fio: data.get('fio'),
+      username: data.get('username'),
       password: data.get('password'),
-    });
+      email: data.get('email'),
+      phone: data.get('phone')
+    };
+    try {
+      const response = await axios.post(url, user);
+      alert('Пользователь добавлен');
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
@@ -57,52 +60,54 @@ export default function SignUp() {
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
+                  name="fio"
                   required
                   fullWidth
-                  id="firstName"
-                  label="Имя"
+                  defaultValue={"Семен Семеныч"}
+                  label="ФИО"
                   autoFocus
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={6}>
                 <TextField
                   required
                   fullWidth
-                  id="lastName"
-                  label="Фамилия"
-                  name="lastname"
-                  autoComplete="family-name"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
+                  defaultValue={"semenich@mail.ru"}
                   label="Email "
                   name="email"
-                  autoComplete="email"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  required
+                  fullWidth
+                  name="username"
+                  defaultValue={"seminich"}
+                  label="Имя пользователя"
+                  type="text"
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
+                  name="phone"
+                  defaultValue={"+77774431212"}
+                  label="Телефон"
+                  type="tel"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  defaultValue={"111"}
                   name="password"
                   label="Пароль"
                   type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
                 />
               </Grid>
             </Grid>
@@ -117,7 +122,14 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link
+                  href='#'
+                  variant="body2"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate('/login')
+                  }}
+                >
                   Уже есть аккаунт? Войти
                 </Link>
               </Grid>

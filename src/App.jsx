@@ -1,5 +1,5 @@
 import React, { useEffect, useState }  from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, } from 'react-router-dom';
 import AdminPage from './pages/AdminPage';
 import ClientPage from './pages/ClientPage';
 import PhotographerPage from './pages/Photographer';
@@ -21,6 +21,7 @@ const theme = createTheme({
     info: {
       main: '#388e3c'
     }
+    
   },
 });
 
@@ -33,6 +34,7 @@ export default () => {
         <Route path='/' element={<AdminPage />}></Route>
         <Route path='/portfolio' element={<PortfolioPage />}></Route>
         <Route path='/login' element={<SignIn />}></Route>
+        <Route path='/registration' element={<SignUp />}></Route>
         <Route
           path="*"
           element={<Navigate to="/" replace />}

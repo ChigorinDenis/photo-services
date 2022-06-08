@@ -3,9 +3,14 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   dialogs: {
     employee: false,
-    stock: false
+    stock: false,
+    material: false,
+    order: false,
+    sevice: false,
+    shedule: false
   },
   activeTabname: 'employee',
+  selectedEmployee: {}
 };
 
 export const uiSlice = createSlice({
@@ -38,9 +43,15 @@ export const uiSlice = createSlice({
         activeTabname: payload
       }
     },
+    selectEmployee: (state, { payload }) => {
+      return {
+        ...state,
+        selectedEmployee: payload
+      }
+    },
   }
 });
 
-export const { openDialog, closeDialog, changeTabname } = uiSlice.actions;
+export const { openDialog, closeDialog, changeTabname, selectEmployee } = uiSlice.actions;
 
 export default uiSlice.reducer;

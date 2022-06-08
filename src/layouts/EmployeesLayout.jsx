@@ -8,9 +8,10 @@ import routes from '../routes';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import GroupIcon from '@mui/icons-material/Group';
-import Button from '@mui/material/Button';
 import ToggleButton from '@mui/material/ToggleButton';
+import AddSheduleForm from './AddSheduleForm';
+import { openDialog } from '../reducers/uiReducer';
+import { selectEmployee } from '../reducers/uiReducer';
 
 const dayRender = (text ='Выходной') => {
   const color = text != 'Выходной' ? '#039be5' : '#ef5350';
@@ -86,9 +87,13 @@ const columnsInfo = [
   { field: 'oklad', headerName: 'Оклад', width: 150 },
   { field: 'premiya', headerName: 'Премия', width: 150 },
   { field: 'control', headerName: '', width: 150, renderCell: (params) => {
+    const dispatch = useDispatch();
     return (
       <IconButton color='secondary'>
-        <CalendarMonthIcon />
+        <CalendarMonthIcon onClick={() => {
+          dispatch(selectEmployee({ id: params.row.id, fio: params.row.fio }));
+          dispatch(openDialog('shedule'));
+        }}/>
       </IconButton>
     )
   } },
@@ -98,8 +103,12 @@ const columnsInfo = [
 const EmployeesLayout = () => {
   const dispatch = useDispatch();
   const [graphIsOpen, setGraphIsOpen] = React.useState(false);
+
   const handleToggle = () => {
     setGraphIsOpen(!graphIsOpen);
+  }
+  const handleOpenShedule = (id) => () => {
+    dispatch(openDialog('shedule'));
   }
   const employees = useSelector((state) => state.employee);
   const employeesGraph = employees
@@ -116,6 +125,7 @@ const EmployeesLayout = () => {
       day6: '09:00 - 18:00',
       day7: '09:00 - 18:00',
     }));
+
   useEffect(() => {
     const fetchData = async () => {
       try {   
@@ -149,6 +159,7 @@ const EmployeesLayout = () => {
         columns={graphIsOpen ? columnsGraph : columnsInfo}
         rows={graphIsOpen ? employeesGraph : employees }
       />
+      <AddSheduleForm />
     </>
   )
 }

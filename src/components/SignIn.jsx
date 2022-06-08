@@ -1,4 +1,5 @@
 import * as React from 'react';
+import axios from 'axios';
 import { useDispatch, useSelector} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
@@ -14,22 +15,33 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { logIn } from '../reducers/authReducer';
-
+import routes from '../routes';
 
 export default function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const auth = useSelector(state => state.auth);
   
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const payload ={
-      email: data.get('email'),
+    const user ={
+      username: data.get('username'),
       password: data.get('password'),
     };
-    dispatch(logIn(payload));
+    const url = routes('login');
+
+    try {
+      const response = await axios.post(url, user);
+      const userResponse = await response.data;
+      if (userResponse.id) {
+        dispatch(logIn(userResponse))
+      }
+    } catch (error) {
+      console.log(error)
+    }
   };
+
   if(auth.isAuth) {
     navigate('/');
   }
@@ -56,11 +68,9 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoComplete="email"
-              autoFocus
+              label="Имя пользователя"
+              name="username"
+              autoComplete="username"
             />
             <TextField
               margin="normal"
@@ -69,7 +79,6 @@ export default function SignIn() {
               name="password"
               label="Пароль"
               type="password"
-              id="password"
               autoComplete="current-password"
             />
             <FormControlLabel
@@ -92,7 +101,14 @@ export default function SignIn() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link 
+                  href="#" 
+                  variant="body2"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate('/registration')
+                  }}
+                >
                   {"Еще нет аккаунта? Регистрация"}
                 </Link>
               </Grid>

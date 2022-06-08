@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = [];
 
 export const stockSlice = createSlice({
-  name: 'tasks',
+  name: 'stocks',
   initialState,
   reducers: {
     stockAllAdd: (state, { payload }) => {

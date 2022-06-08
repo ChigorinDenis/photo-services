@@ -1,4 +1,5 @@
 const host = 'http://localhost:8080';
+// const host = 'http://25.63.58.40:8080';
 const prefix = 'constructor';
 
 export default (name) => {
@@ -6,7 +7,14 @@ export default (name) => {
     getEmployees: [host, 'admin', 'sotrudnik', 'all'].join('/'),
     addEmployee: [host, 'admin', 'sotrudnik', 'add'].join('/'),
     getStock: [host, 'sklad', 'all'].join('/'),
+    getServices: [host, 'admin', 'usluga', 'all' ].join('/'),
     addStock: [host, 'sklad', 'add-new-item'].join('/'),
+    addShedule: [host, 'admin', 'sotrudnik', 'add-grafik'].join('/'),
+    addService: (id_sotr) => ([host, 'admin', 'usluga', 'add', id_sotr].join('/')),
+    addMaterial: [host, 'admin', 'rashodnik', 'add'].join('/'), 
+    addAva: (id) => ([host, 'admin', 'sotrudnik', 'add-avatar', id].join('/')),
+    registration: [host, 'registration', 'add-client'].join('/'),
+    login: [host, 'login'].join('/'),
   }
   return paths[name];
 };

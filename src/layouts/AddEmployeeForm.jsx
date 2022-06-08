@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import InputLabel from '@mui/material/InputLabel';
@@ -13,17 +13,28 @@ import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+import Avatar from '@mui/material/Avatar';
 import routes from '../routes';
 import { employeeAdd } from '../reducers/employeeReducer';
 import { closeDialog } from '../reducers/uiReducer'
 
 
 function AddEmployeeForm(props) {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const inputFileRef = useRef(null);
+
   const ui = useSelector((state) => state.ui);
   const [post, setPost] = React.useState('');
+  const [urlImage, setUrlImage] = React.useState({});
   
-
+  const onImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      let img = event.target.files[0];
+      setUrlImage({
+        image: URL.createObjectURL(img)
+      });
+    }
+  };
   const handleChange = (event) => {
     setPost(event.target.value);
   };
@@ -44,6 +55,11 @@ function AddEmployeeForm(props) {
       premiya: data.get('premiya'),
     };
     const url = routes('addEmployee');
+   // await   axios.post(urlAva, formData, {
+     // headers: {
+   //       "Content-type": "multipart/form-data",
+     // }});
+//alert('ava dobavlena');
     try {
       const response = await axios.post(url, user);
       dispatch(employeeAdd(response.data));
@@ -67,12 +83,43 @@ function AddEmployeeForm(props) {
         >
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <Grid container spacing={3}>
+              <Grid
+                item xs={12}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "40px"
+                }}
+              >
+                <Avatar alt="Remy Sharp" src={urlImage.image}  sx={{ width: 80, height: 80 }} />
+                <Button
+                  variant="text"
+                  color='secondary'
+                  onClick={() => {
+                    inputFileRef.current.click();
+                  }}
+                >
+                    Выбрать фото
+                  </Button>
+              </Grid>
+              
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
                   label="ФИО"
                   name="fio"
+                />
+              </Grid>
+              <Grid item xs={12} sx={{ display: 'none' }}>
+                <TextField
+                  required
+                  fullWidth
+                  label="file"
+                  name="file"
+                  type="file"
+                  inputRef={inputFileRef}
+                  onChange={onImageChange}
                 />
               </Grid>
               <Grid item xs={6}>

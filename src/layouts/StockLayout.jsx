@@ -17,17 +17,7 @@ const columns = [
 const StockLayout = () => {
   const dispatch = useDispatch();
   const stock = useSelector((state) => state.stock);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {   
-        const response = await axios.get(routes('getStock'));    
-        dispatch(stockAllAdd(response.data))
-      } catch(err) {    
-        console.log(err);
-      }
-    }
-   fetchData();
-  }, []);
+ 
   return (
     <DataTable
       columns={columns}

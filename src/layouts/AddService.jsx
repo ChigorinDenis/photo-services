@@ -14,44 +14,48 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import routes from '../routes';
-import { stockItemAdd } from '../reducers/stockReducer';
+import { serviceItemAdd } from '../reducers/serviceReducer';
 import { closeDialog } from '../reducers/uiReducer'
 
 
-function AddStockForm(props) {
+function AddService(props) {
   const dispatch = useDispatch()
   const ui = useSelector((state) => state.ui);
+  const [post, setPost] = React.useState('');
+  
 
   const handleChange = (event) => {
     setPost(event.target.value);
   };
 
   const handleClose = () => {
-    dispatch(closeDialog('stock'));
+    dispatch(closeDialog('service'));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const unit = {
+    const service = {
       name: data.get('name'),
-      type: data.get('type'),
-      units: data.get('units'),
-      number: data.get('number'),
       price: data.get('price'),
+      duration: data.get('duration'),
+      numbers: 1
     };
-    const url = routes('addStock');
+   
+
+    const url = routes('addService')(1);
+    console.log(url)
     try {
-      const response = await axios.post(url, unit);
-      dispatch(stockItemAdd(response.data));
+       const response = await axios.post(url, service);
+       dispatch(serviceItemAdd(response.data));    
     } catch (error) {
       console.log(error)
     }
     handleClose();
   };
   return (
-    <Dialog onClose={handleClose} open={ui.dialogs['stock']}>
-      <DialogTitle>Добавить Материал</DialogTitle>
+    <Dialog onClose={handleClose} open={ui.dialogs['service']}>
+      <DialogTitle>Добавить услугу</DialogTitle>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -76,36 +80,19 @@ function AddStockForm(props) {
                 <TextField
                   required
                   fullWidth
-                  label="Тип"
-                  name="type"
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  required
-                  fullWidth
-                  label="Количество"
-                  name="number"
-                  type='number'
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  required
-                  fullWidth
-                  label="Ед. измерения"
-                  name="units"
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  required
-                  fullWidth
                   label="Цена"
                   name="price"
                 />
               </Grid>
-              
+              <Grid item xs={6}>
+                <TextField
+                  required
+                  fullWidth
+                  label="Длительность"
+                  name="duration"
+                  type='number'
+                />
+              </Grid>
             </Grid>
             <Button
               type="submit"
@@ -123,4 +110,6 @@ function AddStockForm(props) {
   );
 }
 
-export default AddStockForm;
+export default AddService;
+
+

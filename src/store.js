@@ -3,6 +3,7 @@ import employeeReducer from './reducers/employeeReducer.js';
 import authReducer from './reducers/authReducer.js';
 import uiReducer from './reducers/uiReducer.js';
 import stockReducer from './reducers/stockReducer.js';
+import serviceReducer from './reducers/serviceReducer.js';
 
 
 const store = configureStore({
@@ -10,7 +11,8 @@ const store = configureStore({
     auth: authReducer,
     ui: uiReducer,
     employee: employeeReducer,
-    stock: stockReducer
+    stock: stockReducer,
+    service: serviceReducer
   },
 });
 
