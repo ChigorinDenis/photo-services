@@ -1,15 +1,19 @@
-import * as React from 'react';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { basketItemAdd } from '../reducers/basketReducer';
 
-export default function MediaCard({card}) {
+
+export default function MediaCard({ card }) {
+  const dispatch = useDispatch()
   const {
-    title,
-    img,
+    name,
+    file,
     price
   } = card;
   return (
@@ -17,19 +21,32 @@ export default function MediaCard({card}) {
       <CardMedia
         component="img"
         height="140"
-        image={img}
+        image={file}
         alt="green iguana"
       />
       <CardContent>
         <Typography gutterBottom variant="h6" component="div">
-          {title}
+          {name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          от {price}
+          от {price} р.
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" variant='outlined' color='secondary'>Записаться</Button>
+        <Button
+          size="small"
+          variant='outlined'
+          color='secondary'
+          onClick={() => {
+            const basketItem = {
+              ...card,
+              number: 1
+            }
+            dispatch(basketItemAdd(basketItem));
+          }}
+        >
+          Добавить
+        </Button>
       </CardActions>
     </Card>
   );

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
@@ -11,6 +12,7 @@ import { logOut } from '../reducers/authReducer';
 
 const AccountMenu = ({open, handleClose, anchorEl}) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   return (
     <Menu
         anchorEl={anchorEl}
@@ -58,7 +60,10 @@ const AccountMenu = ({open, handleClose, anchorEl}) => {
           Мои Заказы
         </MenuItem>
         <MenuItem 
-          onClick={() => {alert('Выход выполнен'); dispatch(logOut())}}
+          onClick={() => {
+            dispatch(logOut());
+            navigate('/login')
+          }}
         >
           <ListItemIcon>
             <Logout fontSize="small" />

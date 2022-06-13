@@ -43,7 +43,13 @@ export default function SignIn() {
   };
 
   if(auth.isAuth) {
-    navigate('/');
+    if (auth.user.username === 'popov') {
+      navigate('/');
+    }
+    if (auth.user.username === 'admin') {
+      navigate('/admin');
+    }
+    
   }
 
   return (

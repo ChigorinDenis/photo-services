@@ -4,7 +4,9 @@ import authReducer from './reducers/authReducer.js';
 import uiReducer from './reducers/uiReducer.js';
 import stockReducer from './reducers/stockReducer.js';
 import serviceReducer from './reducers/serviceReducer.js';
-
+import sheduleReducer from './reducers/sheduleReducer.js';
+import basketReducer from './reducers/basketReducer.js';
+import ordersReducer from './reducers/ordersReducer.js';
 
 const store = configureStore({
   reducer: {
@@ -12,7 +14,10 @@ const store = configureStore({
     ui: uiReducer,
     employee: employeeReducer,
     stock: stockReducer,
-    service: serviceReducer
+    service: serviceReducer,
+    shedule: sheduleReducer,
+    basket: basketReducer,
+    order: ordersReducer,
   },
 });
 

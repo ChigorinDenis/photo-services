@@ -7,7 +7,8 @@ const initialState = {
     material: false,
     order: false,
     sevice: false,
-    shedule: false
+    shedule: false,
+    basket: false,
   },
   activeTabname: 'employee',
   selectedEmployee: {}

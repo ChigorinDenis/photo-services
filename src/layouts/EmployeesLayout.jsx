@@ -10,8 +10,10 @@ import IconButton from '@mui/material/IconButton';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ToggleButton from '@mui/material/ToggleButton';
 import AddSheduleForm from './AddSheduleForm';
+import Datepicker from '../components/Datepicker';
 import { openDialog } from '../reducers/uiReducer';
 import { selectEmployee } from '../reducers/uiReducer';
+import { sheduleAdd } from '../reducers/sheduleReducer';
 
 const dayRender = (text ='Выходной') => {
   const color = text != 'Выходной' ? '#039be5' : '#ef5350';
@@ -103,6 +105,7 @@ const columnsInfo = [
 const EmployeesLayout = () => {
   const dispatch = useDispatch();
   const [graphIsOpen, setGraphIsOpen] = React.useState(false);
+  const [value, setValue] = React.useState(new Date());
 
   const handleToggle = () => {
     setGraphIsOpen(!graphIsOpen);
@@ -137,23 +140,35 @@ const EmployeesLayout = () => {
     }
    fetchData();
   }, []);
+
+  const handleGetShedules =  () => {
+      axios.all(employees.map(({ id }) => axios.get(routes('getShedules')(id, '13.05.2022'))))
+        .then(axios.spread((...responses) => {
+          responses.map(( data) => console.log(data))
+        }))
+        .catch(errors => console.log(errors))
+      
+    }
+        
+   
   return (
     <>
       <Box
-        sx={{mb: 2}}
+        sx={{mb: 2 ,display: 'flex', justifyContent: 'space-between'}}
       >
-        {/* <IconButton color='secondary'>
-          <CalendarMonthIcon />
-        </IconButton> */}
         <ToggleButton
           size='small'
           color="secondary"
           selected={graphIsOpen}
-          onClick={handleToggle}
+          onClick={() => {
+            handleToggle();
+            handleGetShedules();
+          }}
         >
           <CalendarMonthIcon  fontSize='small' sx={{mr:1}}/>
           График
-        </ToggleButton>      
+        </ToggleButton>
+        {graphIsOpen && <Datepicker value={value} /> }   
       </Box>
       <DataTable
         columns={graphIsOpen ? columnsGraph : columnsInfo}

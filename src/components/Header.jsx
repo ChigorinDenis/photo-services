@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -16,10 +16,15 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import AccountMenu from './AccountMenu';
 import { Link } from 'react-router-dom';
+import { openDialog } from '../reducers/uiReducer';
+
 
 
 export default function ButtonAppBar() {
   const auth = useSelector(state => state.auth);
+  const basket = useSelector(state => state.basket);
+  const dispatch = useDispatch();
+
   const menuId = 'primary-search-account-menu';
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleProfileMenuOpen = (event) => {
@@ -51,11 +56,26 @@ export default function ButtonAppBar() {
             <IconButton
               size="large"
               color="inherit"
-            >
-              <Badge badgeContent={1} color="error">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
+            > 
+              {basket.length > 0 ?
+                (<Badge 
+                  badgeContent={basket.length}
+                  color="error"
+                  onClick={() => {
+                    dispatch(openDialog('basket'))
+                  }}
+                >
+                  <ShoppingCartIcon 
+                  />
+                </Badge>):
+                <ShoppingCartIcon
+                  onClick={() => {
+                    dispatch(openDialog('basket'))
+                  }
+                }                
+                />
+              }
+              </IconButton>
             {auth.isAuth ? (<IconButton
               size="large"
               edge="end"

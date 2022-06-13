@@ -45,24 +45,31 @@ function AddEmployeeForm(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    const formData = new FormData(event.currentTarget);
     const user = {
-      fio: data.get('fio'),
-      username: data.get('username'),
+      fio: formData.get('fio'),
+      username: formData.get('username'),
       post,
-      phone: data.get('phone'),
-      oklad: data.get('oklad'),
-      premiya: data.get('premiya'),
+      phone: formData.get('phone'),
+      oklad: formData.get('oklad'),
+      premiya: formData.get('premiya'),
     };
     const url = routes('addEmployee');
-   // await   axios.post(urlAva, formData, {
-     // headers: {
-   //       "Content-type": "multipart/form-data",
-     // }});
-//alert('ava dobavlena');
+    formData.delete('fio');
+    formData.delete('username');
+    formData.delete('phone');
+    formData.delete('oklad');
+    formData.delete('premiya');
+
     try {
       const response = await axios.post(url, user);
-      dispatch(employeeAdd(response.data));
+      const employee = response.data;
+      const urlAva = routes('addAva')(employee.id)
+      await   axios.post(urlAva, formData, {
+        headers: {
+            "Content-type": "multipart/form-data",
+        }});
+      dispatch(employeeAdd(employee));
     } catch (error) {
       console.log(error)
     }

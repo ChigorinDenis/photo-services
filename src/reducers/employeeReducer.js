@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = [];
 
 export const employeeSlice = createSlice({
-  name: 'tasks',
+  name: 'employee',
   initialState,
   reducers: {
     employeesAdd: (state, { payload }) => {

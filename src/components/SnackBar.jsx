@@ -40,7 +40,7 @@ export default function SimpleSnackbar({isOpen, text}) {
         autoHideDuration={4000}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         onClose={handleClose}
-        message='Авторизация пользователя выполнена успешно'
+        message={text}
         action={action}
       />
     </div>

@@ -1,61 +1,64 @@
 import React from "react";
-import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
 import { Container, Box, Typography, Grid} from "@material-ui/core";
 import Card from "../components/Card"
 import FeaturedPost from "../components/FeaturedPost";
 import SimpleSnack from '../components/SnackBar'
+import Basket from '../components/Basket';
+import routes from "../routes";
+import { serviceAllAdd } from "../reducers/serviceReducer";
 
-
-const services = [
-  {
-    id: 1,
-    title: 'Печать фотографий',
-    img: '/img/print.webp',
-    price: '20р.'
-  },
-  {
-    id: 2,
-    title: 'Печать на кружках',
-    img: '/img/print-cup.webp',
-    price: '390р.'
-  },
-  {
-    id: 3,
-    title: 'Изготовление визиток',
-    img: '/img/make-badge.webp',
-    price: '310р.'
-  },
-  {
-    id: 4,
-    title: 'Фото на холсте',
-    img: '/img/print-canvas.webp',
-    price: '600р.'
-  },
-  {
-    id: 5,
-    title: 'Печать на футболках',
-    img: '/img/print-tshirt.webp',
-    price: '600р.'
-  },
-  {
-    id: 6,
-    title: 'Календари',
-    img: '/img/make-calendar.webp',
-    price: '400р.'
-  },
-  {
-    id: 7,
-    title: 'Переплеты диплома',
-    img: '/img/make-diplom.webp',
-    price: '300р.'
-  },
-  {
-    id: 8,
-    title: 'Фотокнига',
-    img: '/img/photobook.webp',
-    price: '300р.'
-  }
-];
+// const services = [
+//   {
+//     id: 1,
+//     title: 'Печать фотографий',
+//     img: '/img/print.webp',
+//     price: 20
+//   },
+//   {
+//     id: 2,
+//     title: 'Печать на кружках',
+//     img: '/img/print-cup.webp',
+//     price: 390
+//   },
+//   {
+//     id: 3,
+//     title: 'Изготовление визиток',
+//     img: '/img/make-badge.webp',
+//     price: 310
+//   },
+//   {
+//     id: 4,
+//     title: 'Фото на холсте',
+//     img: '/img/print-canvas.webp',
+//     price: 600
+//   },
+//   {
+//     id: 5,
+//     title: 'Печать на футболках',
+//     img: '/img/print-tshirt.webp',
+//     price: 600
+//   },
+//   {
+//     id: 6,
+//     title: 'Календари',
+//     img: '/img/make-calendar.webp',
+//     price: 400
+//   },
+//   {
+//     id: 7,
+//     title: 'Переплеты диплома',
+//     img: '/img/make-diplom.webp',
+//     price: 300
+//   },
+//   {
+//     id: 8,
+//     title: 'Фотокнига',
+//     img: '/img/photobook.webp',
+//     price: 300
+//   }
+// ];
 const featuredPosts = [
   {
     title: 'Фотограф Михаил',
@@ -76,6 +79,20 @@ const featuredPosts = [
 ];
 const ClientPage = () => {
   const auth = useSelector(state => state.auth)
+  const services = useSelector(state => state.service);
+  const dispatch = useDispatch();
+  
+    React.useEffect(() => {
+        const fetchData = async () => {
+          try {   
+            const response = await axios.get(routes('getServices')); 
+            dispatch(serviceAllAdd(response.data))
+          } catch(err) {    
+            console.log(err);
+          }
+        }
+       fetchData();
+      }, []);
   return (
     <>
     <Container>
@@ -113,6 +130,7 @@ const ClientPage = () => {
       </Grid>
     </Container>
     <SimpleSnack isOpen={auth.isAuth} text='Пользователь авторизован'/>
+    <Basket />
     </>
   )
 };

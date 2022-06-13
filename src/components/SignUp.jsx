@@ -66,7 +66,6 @@ export default function SignUp() {
                   name="fio"
                   required
                   fullWidth
-                  defaultValue={"Семен Семеныч"}
                   label="ФИО"
                   autoFocus
                 />
@@ -75,7 +74,6 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  defaultValue={"semenich@mail.ru"}
                   label="Email "
                   name="email"
                 />
@@ -95,7 +93,6 @@ export default function SignUp() {
                   required
                   fullWidth
                   name="phone"
-                  defaultValue={"+77774431212"}
                   label="Телефон"
                   type="tel"
                 />
@@ -104,7 +101,6 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  defaultValue={"111"}
                   name="password"
                   label="Пароль"
                   type="password"

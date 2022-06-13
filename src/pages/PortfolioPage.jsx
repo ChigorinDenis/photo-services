@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import { format } from 'date-fns';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -26,6 +27,7 @@ const mainFeaturedPost = {
   imageText: 'main image description',
   linkText: 'Continue reading…',
 };
+
 const social = [
   { name: 'Instagram', icon: InstagramIcon },
   { name: 'Twitter', icon: TwitterIcon },
@@ -33,7 +35,9 @@ const social = [
 ];
 
 const PortfolioPage = () => {
+
   const [value, setValue] = React.useState(new Date());
+
   return (
     <Container>
       
