@@ -2,7 +2,7 @@ import React from 'react';
 import { DataGrid, ruRU, GridToolbar } from '@mui/x-data-grid';
 
 export default function DataTable(props) {
-  const { rows, columns } = props;
+  const { rows, columns, onRowClick, width } = props;
   return (
     <div style={{ height: 550, width: '100%' }}>
       <DataGrid
@@ -13,6 +13,10 @@ export default function DataTable(props) {
         components={{
           Toolbar: GridToolbar,
         }}
+        onRowClick={(params, event) => {
+          onRowClick(params)
+        }}
+        width={width}
    
       />
     </div>

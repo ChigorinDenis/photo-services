@@ -58,9 +58,7 @@ function AddMaterial(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const url = routes('addMaterial')
-    console.log(url)
-    console.log(list);
-    const materials = list.map(({id, numbers}) => ({ "id_sklad": 1,  "id_uslugi": id, numbers}));
+    const materials = list.map(({id, numbers}) => ({ id_sklad: id,  id_uslugi: ui.dialogsData.id_uslugi, numbers}));
     try {
       await axios.all(materials.map((material) => axios.post(url, material)));
       alert('Расходники добавлены')

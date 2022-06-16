@@ -10,6 +10,7 @@ const initialState = {
     shedule: false,
     basket: false,
   },
+  dialogsData: {},
   activeTabname: 'employee',
   selectedEmployee: {}
 };
@@ -38,6 +39,12 @@ export const uiSlice = createSlice({
         }
       }
     },
+    sendData: (state, { payload }) => {
+      return {
+        ...state,
+        dialogsData: payload
+      }
+    },
     changeTabname: (state, { payload }) => {
       return {
         ...state,
@@ -53,6 +60,6 @@ export const uiSlice = createSlice({
   }
 });
 
-export const { openDialog, closeDialog, changeTabname, selectEmployee } = uiSlice.actions;
+export const { openDialog, closeDialog, changeTabname, selectEmployee, sendData } = uiSlice.actions;
 
 export default uiSlice.reducer;

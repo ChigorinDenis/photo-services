@@ -47,9 +47,9 @@ export default function ButtonAppBar() {
             aria-label="menu"
             sx={{ mr: 2 }}
           >
-            <HomeIcon />
+            <HomeIcon sx={{ color: 'white'}} />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'white' }}>
             Фото | <sub>салон</sub>
           </Typography>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
@@ -65,14 +65,16 @@ export default function ButtonAppBar() {
                     dispatch(openDialog('basket'))
                   }}
                 >
-                  <ShoppingCartIcon 
+                  <ShoppingCartIcon
+                    sx={{ color: 'white'}}
                   />
                 </Badge>):
                 <ShoppingCartIcon
                   onClick={() => {
                     dispatch(openDialog('basket'))
-                  }
-                }                
+                    }
+                  } 
+                  sx={{ color: 'white'}}
                 />
               }
               </IconButton>
@@ -82,7 +84,7 @@ export default function ButtonAppBar() {
               aria-label="account of current user"
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
-              color="inherit"
+              sx={{ color: 'white'}}
             >
               <AccountCircle />
             </IconButton>) : (
@@ -93,6 +95,7 @@ export default function ButtonAppBar() {
                 color="inherit"
                 as={Link} 
                 to='/login'
+                sx={{ color: 'white'}}
               >
                 <LoginIcon />
               </IconButton>
