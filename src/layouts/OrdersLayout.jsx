@@ -13,24 +13,47 @@ import Button from '@mui/material/Button';
 import ToggleButton from '@mui/material/ToggleButton';
 import { Chip } from '@material-ui/core';
 import { ordersAdd } from '../reducers/ordersReducer';
+import format from 'date-fns/format';
 
 
 
 const columns = [
-  { field: 'id', headerName: 'id', width: 50 },
-  { field: 'orderDate', headerName: 'Дата Заказа', width: 150 },
-  { field: 'client', headerName: 'Клиент', width: 300, renderCell: (params) => {
+  { field: 'orderDate', headerName: 'Дата Заказа', width: 150, renderCell: (params) => {
+    return format(new Date(params.row.orderDate), 'dd.MM.yyyy,  hh:mm ')
+  } },
+  { field: 'client', headerName: 'Клиент', width: 200, renderCell: (params) => {
     const { fio, phone } = params.row.client;
-    return `${fio} ${phone}`
+    return (
+      <Box
+        sx={{display: 'flex', flexDirection: 'column'}}
+      >
+        <span>{fio}</span>
+        <b>{phone}</b>
+      </Box>
+    )
   } },
   { field: 'usluga', headerName: 'Услуга', width: 150, renderCell: (params) => {
     return params.row.usluga.name;
   } },
-  { field: 'number', headerName: 'Количество', width: 150 },
+  { field: 'number', headerName: 'Количество', },
   { field: 'totalPrice', headerName: 'Итоговая цена', width: 150 },
-  { field: 'status', headerName: 'Статус', width: 150, renderCell: (params) => {
-    return <Chip label="Новая заявка" color="primary" variant="outlined" size='small' />
+  { field: 'sotrudnik', headerName: 'Сотрудник', width: 150, renderCell: (params) => {
+    return params.row.sotrudnik.fio;
   } },
+  { field: 'completeDate', headerName: 'Дата Заказа', width: 150, renderCell: (params) => {
+    if (!params.row.completeDate) {
+      return null;
+    }
+    return format(new Date(params.row.completeDate), 'dd.MM.yyyy,  hh:mm ')
+  } },
+  { 
+    field: 'status',
+    headerName: 'Статус',
+    width: 150,
+    renderCell: (params) => {
+    return <Chip label="Новый" color="primary" variant="outlined" size='small' />
+    },
+  },
 ];
 
 

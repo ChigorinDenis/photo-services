@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -21,6 +22,7 @@ import { openDialog } from '../reducers/uiReducer';
 
 
 export default function ButtonAppBar() {
+  const navigate = useNavigate()
   const auth = useSelector(state => state.auth);
   const basket = useSelector(state => state.basket);
   const dispatch = useDispatch();
@@ -46,6 +48,11 @@ export default function ButtonAppBar() {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
+            onClick={
+              () => {
+                navigate('/')
+              }
+            }
           >
             <HomeIcon sx={{ color: 'white'}} />
           </IconButton>

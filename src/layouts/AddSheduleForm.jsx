@@ -81,7 +81,7 @@ function AddSheduleForm(props) {
 
   const calcDateTime = (startDate, discreteTimes, fullWeek, isSevenDays) => {
       const year = startDate.getFullYear();
-      const month = startDate.getMonth();
+      const month = startDate.getMonth() + 1;
       const date = startDate.getDate();
       const countDays = fullWeek ? 7 : 1;
       let count = 0;

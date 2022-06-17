@@ -31,8 +31,10 @@ const featuredPosts = [
 ];
 
 const ClientPage = () => {
-  const auth = useSelector(state => state.auth)
+  const auth = useSelector(state => state.auth);
+  const { clientServiceFilter } = useSelector(state => state.ui);
   const services = useSelector(state => state.service);
+  const filteredServices = clientServiceFilter === 'all' ? services : services.filter((f) => f.type === clientServiceFilter);
   const dispatch = useDispatch();
   
     React.useEffect(() => {
@@ -78,7 +80,7 @@ const ClientPage = () => {
             gridColumnGap: 50,
           }}
         >
-          {services.map((service) => (<Card key={service.id} card={service} />))}
+        {filteredServices.map((service) => (<Card key={service.id} card={service} />)).slice(0, 8)}
         </Box>
         <Grid container spacing={4}>
           {featuredPosts.map((post) => (

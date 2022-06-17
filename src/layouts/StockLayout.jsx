@@ -8,7 +8,6 @@ import routes from '../routes';
 import { Typography } from '@mui/material';
 
 const columns = [
-  { field: 'id', headerName: 'id', width: 150 },
   { field: 'name', headerName: 'Название', width: 150 },
   { field: 'type', headerName: 'Тип', width: 150 },
   { field: 'number', headerName: 'Количество', width: 150 },
@@ -36,8 +35,9 @@ const StockLayout = () => {
   return (
     <>
       <Box sx={{display: 'flex', mb:2 , justifyContent: 'space-between'}}>
-        <Typography variant='h6'   >Планируемая закупка материалов</Typography>
         <Typography variant='h6'  >Расходные материалы</Typography>
+        <Typography variant='h6'   >Планируемая закупка материалов</Typography>
+        
       </Box>
       <Box
         sx={{

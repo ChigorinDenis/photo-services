@@ -14,7 +14,7 @@ export default function DataTable(props) {
           Toolbar: GridToolbar,
         }}
         onRowClick={(params, event) => {
-          onRowClick(params)
+          onRowClick && onRowClick(params)
         }}
         width={width}
    

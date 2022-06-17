@@ -5,10 +5,7 @@ import { Container } from '@material-ui/core';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { format } from 'date-fns';
+
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -17,7 +14,8 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import ImageBox from '../components/ImageBox'
-import { ru } from 'date-fns/locale'
+
+import Checkout from '../layouts/Stepper/Checkout';
 
 const mainFeaturedPost = {
   title: 'Фотограф Михаил',
@@ -36,17 +34,17 @@ const social = [
 
 const PortfolioPage = () => {
 
-  const [value, setValue] = React.useState(new Date());
+ 
 
   return (
     <Container>
       
-      <Box sx={{display: 'flex', mt: 5}}>
+      <Box sx={{display: 'flex', mt: 5, gap: 2}}>
         <div style={{width: '100%', height: '100%'}}>
           <MainFeaturedPost  post={mainFeaturedPost} />
         </div>
       
-      <LocalizationProvider dateAdapter={AdapterDateFns} locale={ru}
+      {/* <LocalizationProvider dateAdapter={AdapterDateFns} locale={ru}
       >
       <Box sx={{display: 'flex', flexDirection: 'column'}}>
         <StaticDatePicker
@@ -66,25 +64,19 @@ const PortfolioPage = () => {
           Записаться
         </Button>
       </Box>
-    </LocalizationProvider>
-    </Box>
-    <Box sx={{display: 'flex', mt: 5,mb: 15, gap: 5}}>
-      <Box>
-        <Typography variant='h5' sx={{ color: 'grey.900', mb: 2 }}>Мои работы</Typography>
-        <ImageBox cols={5} />
-      </Box>
-      
-      <Box sx={{width: '40%'}}>
+    </LocalizationProvider> */}
+    <Box sx={{display: 'flex', flexDirection: 'column', width: '300px', justifyContent:'flex-start', gap: 20}}>
         <Paper elevation={0} sx={{ p: 2, bgcolor: 'grey.200' }}>
           <Typography variant="h6" gutterBottom>
             Обо мне
           </Typography>
           <Typography>
-            Мне 27 лет. Работаю фотографом уже более 5 лет. Профессионально подхожу к делу, ищу компромиссы в цветопередаче. 
+            Работаю фотографом уже более 5 лет. Профессионально подхожу к делу, ищу компромиссы в цветопередаче. 
             Пусть ваши воспоминания будут запечатлены.
           </Typography>
         </Paper>
-        <Box sx={{mt: 5}}>
+        
+        <Box>
           {social.map((network) => (
             <Link
               display="block"
@@ -100,6 +92,17 @@ const PortfolioPage = () => {
             </Link>
           ))}
         </Box>
+      </Box>
+    </Box>
+    <Box sx={{display: 'flex'}}>
+      {/* <Box>
+        <Typography variant='h5' sx={{ color: 'grey.900', mb: 2 }}>Мои работы</Typography>
+        <ImageBox cols={5} />
+      </Box> */}
+      <Checkout />
+      <Box sx={{width: '40%'}}>
+        
+        
       </Box>
       
     </Box>
