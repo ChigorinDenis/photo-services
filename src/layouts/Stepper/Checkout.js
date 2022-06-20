@@ -38,7 +38,7 @@ export default function Checkout() {
     const order = {
       id_sotr:7,
       id_client: 2,
-      id_usl: 1,
+      id_usl: fotosession.id_usl,
       grafiks: fotosession.grafiks.map((id) => ({id}))
     }
     try {
@@ -63,10 +63,9 @@ export default function Checkout() {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+   
       <Container component="main" maxWidth="md" sx={{ mb: 4 }}>
-        <Paper variant="outlined" sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}>
+        <Paper variant="outlined" sx={{  p: { xs: 2,  } }}>
           <Typography component="h1" variant="h6" align="center">
             Запись на фотосессию
           </Typography>
@@ -117,6 +116,5 @@ export default function Checkout() {
           </React.Fragment>
         </Paper>
       </Container>
-    </ThemeProvider>
   );
 }

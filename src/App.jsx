@@ -32,6 +32,7 @@ export default () => {
       <Routes>
         <Route path='/' element={<ClientPage />}></Route>
         <Route path='/admin' element={<AdminPage />}></Route>
+        {/* <Route path='/' element={<PhotographerPage />}></Route> */}
         <Route path='/portfolio' element={<PortfolioPage />}></Route>
         <Route path='/login' element={<SignIn />}></Route>
         <Route path='/registration' element={<SignUp />}></Route>

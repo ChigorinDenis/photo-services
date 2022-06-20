@@ -40,20 +40,7 @@ const payments = [
 export default function Review(props) {
   const { fotosession } = props;
 
-    const handleAddOrder = async () => {
-      const order = {
-        id_sotr:7,
-        id_client: 1,
-        id_usl: 1,
-        grafiks: fotosession.grafiks((id) => ({id}))
-      }
-      try {
-        const response = await axios.post(`http://localhost:8080/client/add-to-photograph`, orded);
-        alert('заказ размещен')
-      } catch (error) {
-        console.log(error)
-      }
-    }
+    
   
   return (
     <React.Fragment>

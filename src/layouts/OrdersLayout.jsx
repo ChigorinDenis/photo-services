@@ -11,8 +11,11 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import GroupIcon from '@mui/icons-material/Group';
 import Button from '@mui/material/Button';
 import ToggleButton from '@mui/material/ToggleButton';
+import UpdateStatus from './UpdateStatus';
 import { Chip } from '@material-ui/core';
 import { ordersAdd } from '../reducers/ordersReducer';
+import { openDialog } from '../reducers/uiReducer';
+import { sendData } from '../reducers/uiReducer';
 import format from 'date-fns/format';
 
 
@@ -28,7 +31,7 @@ const columns = [
         sx={{display: 'flex', flexDirection: 'column'}}
       >
         <span>{fio}</span>
-        <b>{phone}</b>
+        <i>{phone}</i>
       </Box>
     )
   } },
@@ -40,7 +43,13 @@ const columns = [
   { field: 'sotrudnik', headerName: 'Сотрудник', width: 150, renderCell: (params) => {
     return params.row.sotrudnik.fio;
   } },
-  { field: 'completeDate', headerName: 'Дата Заказа', width: 150, renderCell: (params) => {
+  { field: 'issueDate', headerName: 'Дата выполнения', width: 150, renderCell: (params) => {
+    if (!params.row.issueDate) {
+      return null;
+    }
+    return format(new Date(params.row.issueDate), 'dd.MM.yyyy,  hh:mm ')
+  } },
+  { field: 'completeDate', headerName: 'Дата Завершения', width: 150, renderCell: (params) => {
     if (!params.row.completeDate) {
       return null;
     }
@@ -49,15 +58,39 @@ const columns = [
   { 
     field: 'status',
     headerName: 'Статус',
-    width: 150,
+    width: 150,  
     renderCell: (params) => {
-    return <Chip label="Новый" color="primary" variant="outlined" size='small' />
+      const mappingStatus = {
+        CREATED: {
+          style: {
+            borderColor: '#039be5', 
+            color: '#039be5'
+          },
+          text: 'Создано'
+        },
+        COMPLETE: {
+          style: {
+            borderColor: '#c0ca33', 
+            color: '#c0ca33'
+          },
+          text: 'Завершено'
+        },
+        ISSUED: {
+          style: {
+            borderColor: '#9575cd', 
+            color: '#9575cd'
+          },
+          text: 'Выполнено'
+        }
+      }
+      const { status } = params.row;
+      return <Chip label={mappingStatus[status].text}   style={mappingStatus[status].style} variant="outlined" size='small' />
     },
   },
 ];
 
 
-const EmployeesLayout = () => {
+const OrdersLayout = () => {
   const dispatch = useDispatch();
 
   const orders = useSelector((state) => state.order);
@@ -78,9 +111,14 @@ const EmployeesLayout = () => {
       <DataTable
         columns={columns}
         rows={orders}
+        onRowDoubleClick={(params) => {
+          dispatch(openDialog('status'))
+          dispatch(sendData({id: params.row.id }))
+        }}
       />
+      <UpdateStatus />
     </>
   )
 }
 
-export default EmployeesLayout;
+export default OrdersLayout;

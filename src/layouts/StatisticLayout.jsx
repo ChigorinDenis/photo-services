@@ -10,6 +10,8 @@ import IconButton from '@mui/material/IconButton';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import GroupIcon from '@mui/icons-material/Group';
 import Button from '@mui/material/Button';
+import GetAppIcon from '@mui/icons-material/GetApp';
+import  * as XLSX from 'xlsx'
 import ToggleButton from '@mui/material/ToggleButton';
 
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -36,7 +38,7 @@ const mostServiceColumns = [
   { field: 'price', headerName: 'Цена', width: 250 },
   { field: 'num', headerName: 'Количество обращений', width: 250 },
 ];
-const materialColumns = [
+const servicesByDateColumns = [
   { field: 'name', headerName: 'Услуга', width: 250},
   { field: 'type', headerName: 'Тип услуги', width: 250},
   { field: 'price', headerName: 'Цена', width: 250 },
@@ -77,13 +79,13 @@ const mapURL = {
     columns: currentIncomeColumns,
     date: false,
   },
-  materials: {
-    url: (dateStart, dateEnd) => (`http://localhost:8080/admin/get-consumption-between-dates/${dateStart}/${dateEnd}`),
-    columns: materialColumns,
+  servicesByDate: {
+    url: (dateStart, dateEnd) => (`http://localhost:8080/admin/usluga/statistic-by-date/${dateStart}/${dateEnd}`),
+    columns:  servicesByDateColumns,
     date: true,
   },
 }
-// localhost:8080/admin/get-consumption-between-dates/yyyy-MM-dd/yyyy-MM-dd 
+
 const StatisticLayout = () => {
   const [setting, setSetting] = React.useState({});
   const [rows, setRows] = React.useState([]);
@@ -91,12 +93,23 @@ const StatisticLayout = () => {
   const [dateStart, setDateStart] = React.useState(new Date());
   const [dateEnd, setDateEnd] = React.useState(new Date());
 
+
+  const handleOnExport = () => {
+    const wb = XLSX.utils.book_new()
+    const ws =  XLSX.utils.json_to_sheet(rows);
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'Report.xlsx');
+  }
+  const ExportButton = () => {
+    return <Button variant='contained' startIcon={<GetAppIcon />} color='secondary' size='small' onClick={handleOnExport}>Экспорт</Button>
+  }
   const handleChange = (event) => {
     setRows([])
     setName(event.target.value);
     const setting = mapURL[event.target.value];
     setSetting(setting);
   };
+
   const handleShow = async () => {
     let url;
     if (setting.date) {
@@ -134,10 +147,10 @@ const StatisticLayout = () => {
             sx={{ minWidth: '500px'}}
             size="medium"
           >
-            <MenuItem value={'mostService'}>Отчет по наиболее востребованные услуги</MenuItem>
+            <MenuItem value={'mostService'}>Отчет по наиболее востребованным услугам</MenuItem>
             <MenuItem value={'freqClient'}>Отчет по частоте обращения клиентов, последние заказы</MenuItem>
             <MenuItem value={'currentIncome'}>Отчет по доходу фотосалона за текущий год</MenuItem>
-            {/* <MenuItem value={'materials'}>Отчет по расходным материалам</MenuItem> */}
+            <MenuItem value={'servicesByDate'}>Отчет оказанным услугам за опледеленный период</MenuItem>
           </Select>
         </FormControl>
         {setting.date && <>
@@ -187,6 +200,7 @@ const StatisticLayout = () => {
       <DataTable
         columns={setting.columns || []}
         rows={rows || []}
+        ExportButton={ExportButton}
       />
     </>
   )

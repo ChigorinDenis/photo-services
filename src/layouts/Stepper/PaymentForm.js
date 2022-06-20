@@ -83,17 +83,17 @@ export default function PaymentForm(props) {
                 mt:3
               }}>
                 {times.map(({id, time, type}) => {
-              return (
-                <Chip
-                  label={time}
-                  color={fotosession.grafiks.includes(id) ? "secondary": "primary"}
-                  disabled={type === 'BUSY'}
-                  onClick={() => {
-                    handleAddGrafiks(id);
-        
-                  }}
-                  />
-              )
+                  return (
+                    <Chip
+                      label={time}
+                      color={fotosession.grafiks.includes(id) ? "secondary": "primary"}
+                      disabled={type === 'BUSY'}
+                      onClick={() => {
+                        handleAddGrafiks(id);
+            
+                      }}
+                      />
+                  )
             })}
             </Box>
             

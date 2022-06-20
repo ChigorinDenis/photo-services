@@ -94,14 +94,15 @@ const PortfolioPage = () => {
         </Box>
       </Box>
     </Box>
-    <Box sx={{display: 'flex'}}>
-      {/* <Box>
-        <Typography variant='h5' sx={{ color: 'grey.900', mb: 2 }}>Мои работы</Typography>
+    <Box sx={{display: 'flex', flexDirection: 'row-reverse', justifyContent: 'space-between'}}>
+      <Box sx={{ width: '40%'}}>
+        <Typography variant='h6' sx={{ color: 'grey.700', mb: 2 }}>Мои работы</Typography>
         <ImageBox cols={5} />
-      </Box> */}
-      <Checkout />
-      <Box sx={{width: '40%'}}>
-        
+      </Box>
+      
+      <Box sx={{ width: '60%'}}>
+        <Typography variant='h6' sx={{ color: 'grey.700', mb: 2 }}>Мои услуги</Typography>
+        <Checkout />
         
       </Box>
       

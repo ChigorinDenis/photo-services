@@ -16,7 +16,7 @@ import { openDialog, sendData } from "../reducers/uiReducer";
 
 const columns = [
     { field: 'id', headerName: 'id', width: 150 },
-    { field: 'name', headerName: 'Название', width: 150 },
+    { field: 'name', headerName: 'Название', width: 300 },
     { field: 'price', headerName: 'Цена', width: 150 },
     { field: 'duration', headerName: 'Длительность', width: 150 },
     { renderCell: (params) => {

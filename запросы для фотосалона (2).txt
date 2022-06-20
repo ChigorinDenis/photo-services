@@ -1,0 +1,319 @@
+гет запросы
+localhost:8080/admin/get-roles
+localhost:8080/admin/get-users
+
+post запросы
+localhost:8080/admin/del-user/{id}
+localhost:8080/admin/del-role/{id}
+localhost:8080/admin/get-user-details/{id}
+localhost:8080/admin/get-role-details/{id}
+
+localhost:8080/admin/add-new-role
+{
+    "name":"ADMIN"
+}
+
+localhost:8080/admin/save-editing-role
+{
+    "id":1,
+    "name":"ADMIN"
+}
+
+localhost:8080/login
+{
+    "username":"petrov",
+    "password":"123"
+}
+
+localhost:8080/admin/add-new-user
+{
+    "username":"petrov",
+    "password":"123",
+    "passwordConfirm":"123"
+}
+
+localhost:8080/admin/add-new-user-with-role
+{
+    "username":"petrov",
+    "password":"123",
+    "passwordConfirm":"123",
+    "roles":[
+        {"name":"ADMIN"},
+        {"name":"EMPLOYEE"}
+    ]
+}
+get-запросы
+localhost:8080/admin/sotrudnik/all
+localhost:8080/admin/sotrudnik/{id}
+localhost:8080/admin/sotrudnik/{id}/delete
+localhost:8080/admin/sotrudnik/by-username/{username}
+localhost:8080/admin/sotrudnik/all-by-post/{post}
+
+localhost:8080/admin/sotrudnik/add
+{
+    "username": "qwerty",
+    "fio": "Иванов Иван Иванович",
+    "post": "Фотограф",
+    "phone": "+77775614148",
+    "oklad": 15400,
+    "premiya": 7800
+}
+
+localhost:8080/admin/sotrudnik/edit
+{
+    "id": 1,
+    "username": "qwerty",
+    "fio": "Иванов Иван Иванович",
+    "post": "Фотограф",
+    "phone": "+77775614148",
+    "oklad": 27400.0,
+    "premiya": 7800.0
+}
+
+localhost:8080/admin/user-sotrudnik/add
+{
+    "username": "petrov",
+    "password": "123",
+    "fio": "Петров Петр Петрович",
+    "post": "Фотограф",
+    "phone": "+77774567890",
+    "oklad": 27400.0,
+    "premiya": 7800.0,
+    "roles": [
+        {
+            "name": "ADMIN"
+        },
+        {
+            "name": "EMPLOYEE"
+        }
+    ]
+}
+
+localhost:8080/admin/grafik/{id}/delete гет запрос на удаление записи графика по ее id
+
+localhost:8080/admin/sotrudnik/{id}/get-grafik/from/{date1}/to/{date2} - get запрос на получение графика в выбранный промежуток времени для выбранного пользователя
+
+localhost:8080/admin/sotrudnik/add-grafik/ - post запрос для добавлния графика работы сотрудника, возвращает полный график работы сотрудника (если не надо то уберу)
+{
+    "idSotr":2,
+    "dates":[
+        {"date":"25.05.2022 08:00"},
+        {"date":"25.05.2022 09:00"},
+        {"date":"25.05.2022 10:00"},
+        {"date":"25.05.2022 11:00"},
+        {"date":"25.05.2022 12:00"}
+    ]
+}
+
+файл аватарки передается в виде параметра:
+form-data-> key: "file" type: file value: avatar.jpg
+localhost:8080/admin/sotrudnik/add-avatar/{id}
+
+гет запрос вытаскивает из базы url аватарки
+localhost:8080/admin/sotrudnik/get-avatar/{id}
+//////////////////////////////////////
+get запрос
+localhost:8080/sklad/all
+localhost:8080/sklad/get-item/{id}
+localhost:8080/sklad/search-item/{keyword} - ищет по полям name и type без учета регистра
+
+localhost:8080/sklad/add-new-item
+{
+    "name": "Фотобумага А4",
+    "type": "Фотобумага",
+    "units": "лист",
+    "number": 500,
+    "price": 2
+}
+
+localhost:8080/sklad/edit-item/
+{
+    "id": 1,
+    "name": "Фотобумага А3",
+    "type": "Фотобумага",
+    "units": "лист",
+    "number": 500,
+    "price": 5
+}
+/////////////////////////////////////
+localhost:8080/photograph/all-by-user-role/{role} - гет запрос, возвращает фотографов
+
+localhost:8080/photograph/portfolio/add - post-запрос
+{
+    "about":"Портфолио фотографа",
+    "idSotr":2
+}
+
+localhost:8080/photograph/portfolio/edit - post-запрос
+{
+    "id":1,
+    "about":"Портфолио фотографа измененное",
+    "idSotr":2
+}
+
+post запрос на вставку множества картинок
+параметры:
+form-data-> key: "files" type: file
+localhost:8080/photograph/portfolio/add-photo/{id_sotrudnika}
+
+гет запрос, возвращает список url картинок для портфолио
+localhost:8080/photograph/portfolio/get-photos/{id_sotrudnika}
+
+/////////////////////////////////////////////
+post запрос, регистрация клиента
+localhost:8080/registration/add-client
+{
+    "username": "client",
+    "password": "111",
+    "fio": "Фролова Мария Ивановна",
+    "email": "frolova@mail.ru",
+    "phone": "+77775678900"
+}
+
+localhost:8080/registration/client-by-username/{username} - get запрос на получение клиента по юзернейму
+
+//////////////////////////USLUGI//////////////
+
+localhost:8080/admin/usluga/add/{id_sotrudnika} - post запрос на добавление услуги
+{
+    "name": "Печать фото А4",
+    "price": 25,
+    "duration": 1,
+    "numbers": 1,
+    "file": "C:/Users/Tom/Downloads/1.jpg"
+}
+
+localhost:8080/admin/usluga/edit - post запрос на редактирование услуги
+{
+    "id": 1,
+    "name": "Печать фото А5",
+    "price": 20.0,
+    "duration": 1,
+    "numbers": 1,
+    "id_sotr": 2,
+    "file": "C:/Users/Tom/Downloads/1.jpg"
+}
+
+localhost:8080/admin/usluga/all - get запрос на получение списка всех услуг
+localhost:8080/admin/usluga/by-sotrudnik/{id_sotrudnika} - get запрос на получение списка услуг для выбранного сотрудника
+
+///////////////rashodniki////////////////////////////
+localhost:8080/admin/rashodnik/add/ - post запрос на добавление расходника
+{
+    "id_sklad": 1,
+    "id_uslugi": 1,
+    "numbers": 20
+}
+
+localhost:8080/admin/usluga/add-with-rashodniks/ - post запрос на добавление услуги вместе с необходимым расходниками для этой услуги
+{
+    "name": "Печать фото А2",
+    "price": 45.0,
+    "duration": 1,
+    "numbers": 1,
+    "id_sotr": 2,
+    "list": [
+        {
+            "id_sklad": "1",
+            "numbers": "26"
+        },
+	{
+            "id_sklad": "2",
+            "numbers": "45"
+        },
+    ]
+}
+localhost:8080/admin/usluga/{id}/delete - get запросы для удаления услуги
+localhost:8080/admin/rashodnik/{id}/delete - запрос get на удаление 
+
+////////////////////////skidka///////////////
+localhost:8080/sotrudnik/skidka/add - post запрос на добавление новой скидки
+{
+    "basis": "Просто так",
+    "size": "500",
+    "id_sotr": "2",
+    "id_clienta": "1",
+    "id_uslugi": "1"
+}
+
+localhost:8080/sotrudnik/skidka/edit - post запрос на редактирование скидки
+{
+    "id": 1,
+    "basis": "Просто так 2",
+    "size": "600",
+    "id_sotr": "2",
+    "id_clienta": "1",
+    "id_uslugi": "1"
+}
+
+localhost:8080/sotrudnik/skidka/all - гет запрос на получение списка всех скидок
+
+localhost:8080/sotrudnik/skidka-by-sotrudnik/{id_sotrudnika} - гет запрос на получение всех выданных скидок сотрудником
+
+localhost:8080/sotrudnik/skidka-by-client/{id_sotrudnika} - гет запрос на получение всех скидок у клиента
+
+localhost:8080/sotrudnik/skidka/{id}/delete - get запрос на удаление скидки
+
+////обновленная скидка
+localhost:8080/sotrudnik/skidka-to-usluga/add - Post запрос на добавление скидки к заказу
+{
+	"idUslugi":1,
+	"skidka":10,
+	"basis":"Сезонная скидка"
+}
+
+localhost:8080/client/add-new-zakaz - post запрос на добавление нового заказа
+{
+    "number": 3,
+    "id_sotr": 1,
+    "id_client": 1,
+    "id_usligi": 1
+}
+
+GET-запросы:
+/client/get-zakaz-by-id/{id_zakaz}
+/client/get-zakazy-by-client-id/{id_client}
+/client/get-all-zakazy
+/client/get-zakazy-by-status/{stat}
+получение списка заказов между двумя датами:
+/client/get-zakazy-by-date/{date1}/{date2} date = "yyyy-MM-dd"
+
+enum ZakazStatus {
+    CREATED,
+    PAID,
+    PERFORMED,
+    COMPLETE,
+    ISSUED
+}
+
+/client/get-zakazy-by-date-and-status/{date1}/{date2}/{stat}
+/client/update-zakaz-status/{id_zakaz}/{stat}
+///дополнение к услугам 
+/admin/rashodnik/add - пост запрос на добваление новго расходника
+{
+    "id_sklad": 1,
+    "id_uslug": 1,
+    "numbers": 5
+}
+
+/admin/rashodniki-all - гет запрос для получения списка всех расходников
+/admin/rashodniki-from-sklad/{id_sklad} - гет запрос на получение расходников по складу
+localhost:8080/admin/usluga/by-type/{type} - get запрос для поиска услуг по типу
+
+отчеты:
+localhost:8080/admin/usluga/statistic-by-date/yyyy-MM-dd/yyyy-MM-dd - get запрос отчет по оказанным услугам за определенный период
+
+localhost:8080/admin/usluga/statistic-by-year/2022 - get запрос по доходам за опредленный период (за год по месяцам)
+
+localhost:8080/client/add-to-photograph - post запрос для записи на прием к фотографу
+{
+    "id_sotr": 1,
+    "id_client": 1,
+    "id_usl": 1,
+    "grafiks": [
+        {"id":1},
+        {"id":2}
+    ]
+}
+
+localhost:8080/admin/get-zakaz-by-usluga-type/{type_uslugi} -  get запрос для получения заказов по типу услуги
