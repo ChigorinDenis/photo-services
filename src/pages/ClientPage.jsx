@@ -1,4 +1,4 @@
-import React from "react";
+import React,  { useEffect } from "react";
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { Container, Box, Typography, Grid} from "@material-ui/core";
@@ -33,15 +33,27 @@ const featuredPosts = [
 const ClientPage = () => {
   const auth = useSelector(state => state.auth);
   const { clientServiceFilter } = useSelector(state => state.ui);
+  const [discounts, setDiscounts] = React.useState([])
   const services = useSelector(state => state.service);
   const filteredServices = clientServiceFilter === 'all' ? services : services.filter((f) => f.type === clientServiceFilter);
   const dispatch = useDispatch();
   
-    React.useEffect(() => {
+    useEffect(() => {
         const fetchData = async () => {
           try {   
             const response = await axios.get(routes('getServices')); 
             dispatch(serviceAllAdd(response.data))
+          } catch(err) {    
+            console.log(err);
+          }
+        }
+       fetchData();
+      }, []);
+      useEffect(() => {
+        const fetchData = async () => {
+          try {   
+            const response = await axios.get(routes('getDiscount'));    
+            setDiscounts(response.data)
           } catch(err) {    
             console.log(err);
           }
@@ -61,7 +73,7 @@ const ClientPage = () => {
       <Container>
         <Box>
         <Typography gutterBottom variant="h5" component="div" sx={{color: 'secondary.main'}}>
-            Добро пожаловать в мир фотографий!
+            `Добро пожаловать в мир фотографий!`
           </Typography>
           <Typography variant="body2">
           Наш фотосалон – это долгожданный момент творчества, вдохновение, радость, уникальные дизайны и невероятно красивые решения.
@@ -80,7 +92,13 @@ const ClientPage = () => {
             gridColumnGap: 50,
           }}
         >
-        {filteredServices.map((service) => (<Card key={service.id} card={service} />)).slice(0, 8)}
+        {filteredServices.map((service) => {
+          const discount = discounts.find((f) => f.usluga.id === service.id);
+          return (
+            <Card key={service.id} card={service} discount={discount}/>
+          )
+        })
+        }
         </Box>
         <Grid container spacing={4}>
           {featuredPosts.map((post) => (
@@ -89,7 +107,7 @@ const ClientPage = () => {
         </Grid>
       </Container>
     </Box>
-    <SimpleSnack isOpen={auth.isAuth} text='Пользователь авторизован'/>
+    <SimpleSnack isOpen={auth.isAuth} text={`Пользователь ${auth?.user?.username} авторизован`} />
     <Basket />
     </>
   )

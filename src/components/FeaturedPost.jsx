@@ -14,7 +14,7 @@ import LandscapeIcon from '@mui/icons-material/Landscape';
 import { Link } from 'react-router-dom';
 
 function FeaturedPost(props) {
-  const { post } = props;
+  const { post, portfolio = true } = props;
 
   return (
     <Grid item xs={12} md={6}>
@@ -35,7 +35,7 @@ function FeaturedPost(props) {
             <Typography variant="subtitle1" paragraph>
               {post.description}
             </Typography>
-            <ImageBox cols={6}/>
+            {portfolio && <ImageBox cols={6}/>}
             <Link to='/portfolio'>
             <Typography variant="subtitle1" color="primary" >
               Посмотреть подробнее...

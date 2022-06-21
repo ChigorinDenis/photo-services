@@ -9,7 +9,8 @@ const initialState = {
     sevice: false,
     shedule: false,
     basket: false,
-    status: false
+    status: false,
+    discount: false,
   },
   dialogsData: {},
   activeTabname: 'employee',

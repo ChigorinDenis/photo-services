@@ -36,9 +36,11 @@ export default function SignUp() {
     try {
       const response = await axios.post(url, user);
       alert('Пользователь добавлен');
+      navigate('/login')
     } catch (error) {
       console.log(error)
     }
+    e.target.reseet();
   };
 
   return (
@@ -83,7 +85,6 @@ export default function SignUp() {
                   required
                   fullWidth
                   name="username"
-                  defaultValue={"seminich"}
                   label="Имя пользователя"
                   type="text"
                 />

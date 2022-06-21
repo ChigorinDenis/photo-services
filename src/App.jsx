@@ -1,4 +1,5 @@
 import React, { useEffect, useState }  from 'react';
+import axios from 'axios';
 import { Routes, Route, Navigate, } from 'react-router-dom';
 import AdminPage from './pages/AdminPage';
 import ClientPage from './pages/ClientPage';
@@ -26,13 +27,24 @@ const theme = createTheme({
 });
 
 export default () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {   
+        const response = await axios.get(routes('getServices')); 
+        dispatch(serviceAllAdd(response.data))
+      } catch(err) {    
+        console.log(err);
+      }
+    }
+   fetchData();
+  }, []);
   return (
     <ThemeProvider theme={theme}>
       <Header />
       <Routes>
         <Route path='/' element={<ClientPage />}></Route>
         <Route path='/admin' element={<AdminPage />}></Route>
-        {/* <Route path='/' element={<PhotographerPage />}></Route> */}
+        <Route path='/photographer' element={<PhotographerPage />}></Route>
         <Route path='/portfolio' element={<PortfolioPage />}></Route>
         <Route path='/login' element={<SignIn />}></Route>
         <Route path='/registration' element={<SignUp />}></Route>

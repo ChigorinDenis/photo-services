@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import DataTable from '../components/DataTable';
 import Avatar from '@mui/material/Avatar';
-
+import AddDiscount from './AddDiscount';
 import routes from '../routes';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -63,6 +63,7 @@ const DiscountLayout = () => {
         columns={columns}
         rows={discount}
       />
+      <AddDiscount />
     </>
   )
 }

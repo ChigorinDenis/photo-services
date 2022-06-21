@@ -63,6 +63,50 @@ const freqClientColumns = [
   { field: 'num', headerName: 'Количество заказов', width: 300 },
 ];
 
+const salaryColumns = [
+  { field: 'fio', headerName: 'Фио', width: 300},
+  { field: 'post', headerName: 'Должность', width: 300},
+  { field: 'oklad', headerName: 'Оклад', width: 300, renderCell: (params) => {
+    return `${params.row.oklad} руб.`
+  }},
+  { field: 'premiya', headerName: 'Премия', width: 200, renderCell: (params) => {
+    return `${params.row.premiya} руб.`
+  }},
+  { field: 'hours', headerName: 'Часы', width: 200},
+  { field: 'zarplata', headerName: 'Зарплата', width: 200},
+];
+
+const convertToExport = (reportName, reportData) => {
+  const mapConvert = {
+    mostService: {
+      headers: ['Услуга', 'Тип услуги', 'Цена', 'Количество обращений'],
+      fields: ['name', 'type', 'price', 'num'],
+    },
+    freqClient: {
+      headers: ['Клиент', 'Дата и время последнего заказа', 'Количество заказов'],
+      fields: ['fio', 'lastZakazDate', 'num'],
+    },
+    currentIncome: {
+      headers: ['Месяц', 'Количество услуг', 'Доход'],
+      fields: ['month', 'num', 'total'],
+    },
+    servicesByDate: {
+      headers: ['Услуга', 'Цена', 'Количество'],
+      fields: ['name', 'price', 'num'],
+    },
+    salary: {
+      headers: ['ФИО', 'Должность', 'Оклад', 'Премия', 'Часы', 'Зарплата'],
+      fields: ['fio', 'post', 'oklad', 'premiya', 'hours','zarplata'],
+    },
+  }
+  const mapped = mapConvert[reportName]
+  const convertedData = reportData.reduce((acc, item) => {
+    const row = mapped.fields.map((field) => (item[field]));
+    return [...acc, row]
+  }, [mapped.headers])
+  return convertedData;
+}
+
 const mapURL = {
   mostService: {
     url: 'http://localhost:8080/admin/get-statistic-by-uslugi',
@@ -84,6 +128,11 @@ const mapURL = {
     columns:  servicesByDateColumns,
     date: true,
   },
+  salary: {
+    url: (dateStart, dateEnd) => (`http://localhost:8080/admin/get-zarplata-table/${dateStart}/${dateEnd}`),
+    columns:  salaryColumns,
+    date: true,
+  },
 }
 
 const StatisticLayout = () => {
@@ -95,8 +144,10 @@ const StatisticLayout = () => {
 
 
   const handleOnExport = () => {
+    const data = convertToExport(name, rows)
     const wb = XLSX.utils.book_new()
-    const ws =  XLSX.utils.json_to_sheet(rows);
+    const ws =  XLSX.utils.aoa_to_sheet(data);
+   
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, 'Report.xlsx');
   }
@@ -151,6 +202,7 @@ const StatisticLayout = () => {
             <MenuItem value={'freqClient'}>Отчет по частоте обращения клиентов, последние заказы</MenuItem>
             <MenuItem value={'currentIncome'}>Отчет по доходу фотосалона за текущий год</MenuItem>
             <MenuItem value={'servicesByDate'}>Отчет оказанным услугам за опледеленный период</MenuItem>
+            <MenuItem value={'salary'}>Расчет заработной платы за период</MenuItem>
           </Select>
         </FormControl>
         {setting.date && <>

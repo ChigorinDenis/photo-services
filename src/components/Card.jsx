@@ -7,9 +7,9 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { basketItemAdd } from '../reducers/basketReducer';
+import Chip from '@material-ui/core/Chip';
 
-
-export default function MediaCard({ card }) {
+export default function MediaCard({ card, discount }) {
   const dispatch = useDispatch()
   const {
     name,
@@ -31,6 +31,7 @@ export default function MediaCard({ card }) {
         <Typography variant="body2" color="text.secondary">
           от {price} р.
         </Typography>
+        {discount && <Chip label={`- ${discount.size} %`} color="secondary" />}
       </CardContent>
       <CardActions>
         <Button

@@ -20,7 +20,7 @@ import routes from '../routes';
 export default function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const auth = useSelector(state => state.auth);
+  const { user, isAuth }  = useSelector(state => state.auth);
   
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -42,12 +42,17 @@ export default function SignIn() {
     }
   };
 
-  if(auth.isAuth) {
-    if (auth.user.username === 'popov') {
+  if (isAuth) {
+    const roles = user.roles.map((role) => role.name);
+
+    if (roles.length === 0) {
       navigate('/');
     }
-    if (auth.user.username === 'admin') {
+    if (roles.includes('ADMIN')) {
       navigate('/admin');
+    }
+    if (roles.includes('PHOTOGRAPHER')) {
+      navigate('/photographer');
     }
     
   }
@@ -76,6 +81,7 @@ export default function SignIn() {
               fullWidth
               label="Имя пользователя"
               name="username"
+              defaultValue="admin"
               autoComplete="username"
             />
             <TextField
@@ -84,6 +90,7 @@ export default function SignIn() {
               fullWidth
               name="password"
               label="Пароль"
+              defaultValue={111}
               type="password"
               autoComplete="current-password"
             />

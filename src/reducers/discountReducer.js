@@ -9,9 +9,12 @@ export const discountSlice = createSlice({
     discountAdd: (state, { payload }) => {
       return [...payload];
     },
+    discountOneAdd: (state, { payload }) => {
+      return [...state, payload];
+    },
   }
 });
 
-export const { discountAdd } = discountSlice.actions;
+export const { discountAdd, discountOneAdd } = discountSlice.actions;
 
 export default discountSlice.reducer;
