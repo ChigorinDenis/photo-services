@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -24,11 +24,15 @@ export default function Basket(props) {
   const summary = basket.reduce((acc, item) => {
     acc.sumNumber += 1
     acc.sumPrice += (item.price * item.number)
+    if (item.discountSize) {
+      acc.sumPriceWithDiscount += ((1 - item.discountSize / 100) * item.price * item.number)
+    }
     return acc;
-  }, { sumPrice: 0, sumNumber: 0})
+  }, { sumPrice: 0, sumNumber: 0, sumPriceWithDiscount: 0})
 
   const { dialogs } = useSelector(state => state.ui);
   const dispatch = useDispatch();
+ 
 
   const handleSubmit  = async (event) => {
     event.preventDefault(); 
@@ -127,7 +131,7 @@ export default function Basket(props) {
               }}
             >
               <Typography variant='body2'><b>Итого сумма</b></Typography>
-              <Typography variant='subtitle2'>{`${summary.sumPrice} р.`}</Typography>
+              <Typography variant='subtitle2'>{ summary.sumPriceWithDiscount === 0 ? `${summary.sumPrice} р.` : <><strike style={{color: 'red'}}>{summary.sumPrice}</strike> { summary.sumPriceWithDiscount}</>  }</Typography>
             </Box>
             <Box
             sx={{

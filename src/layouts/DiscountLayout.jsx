@@ -18,7 +18,7 @@ import format from 'date-fns/format';
 
 
 const columns = [
-  { field: 'basis', headerName: 'Название скидки', width: 150 },
+  { field: 'basis', headerName: 'Основание скидки', width: 150 },
   { field: 'size', headerName: 'Размер скидки', width: 150 },
   { field: 'client', headerName: 'Клиент', width: 200, renderCell: (params) => {
     const { fio, phone } = params.row.client;

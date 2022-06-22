@@ -36,11 +36,11 @@ function FeaturedPost(props) {
               {post.description}
             </Typography>
             {portfolio && <ImageBox cols={6}/>}
-            <Link to='/portfolio'>
-            <Typography variant="subtitle1" color="primary" >
+            {portfolio && <Link to='/portfolio'>
+             <Typography variant="subtitle1" color="primary" >
               Посмотреть подробнее...
             </Typography>
-            </Link>
+            </Link>}
           </CardContent>
           <CardMedia
             component="img"

@@ -8,6 +8,7 @@ import sheduleReducer from './reducers/sheduleReducer.js';
 import basketReducer from './reducers/basketReducer.js';
 import ordersReducer from './reducers/ordersReducer.js';
 import discountReducer from './reducers/discountReducer.js';
+import clientsReducer from './reducers/clientsReducer.js';
 
 const store = configureStore({
   reducer: {
@@ -19,7 +20,8 @@ const store = configureStore({
     shedule: sheduleReducer,
     basket: basketReducer,
     order: ordersReducer,
-    discount: discountReducer
+    discount: discountReducer,
+    client: clientsReducer
   },
 });
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useState }  from 'react';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { Routes, Route, Navigate, } from 'react-router-dom';
 import AdminPage from './pages/AdminPage';
@@ -8,6 +9,7 @@ import PortfolioPage from './pages/PortfolioPage';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import Header from './components/Header';
+import routes from './routes'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 
@@ -27,6 +29,7 @@ const theme = createTheme({
 });
 
 export default () => {
+  const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
       try {   

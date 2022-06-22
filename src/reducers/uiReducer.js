@@ -11,6 +11,7 @@ const initialState = {
     basket: false,
     status: false,
     discount: false,
+    client: false
   },
   dialogsData: {},
   activeTabname: 'employee',

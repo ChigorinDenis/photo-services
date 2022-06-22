@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import InputLabel from '@mui/material/InputLabel';
@@ -16,6 +16,7 @@ import Container from '@mui/material/Container';
 import routes from '../routes';
 import { discountOneAdd } from '../reducers/discountReducer';
 import { closeDialog } from '../reducers/uiReducer'
+import { clientsAdd } from '../reducers/clientsReducer'
 
 
 function AddDiscount(props) {
@@ -24,11 +25,27 @@ function AddDiscount(props) {
   const { user } = useSelector((state) => state.auth);
   const services = useSelector((state) => state.service);
   const [status, setStatus] = React.useState('');
+  const [client, setClient] = React.useState({});
+  const clients = useSelector((state) => state.client);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {   
+        const response = await axios.get('http://localhost:8080/admin/get-all-clients');    
+        dispatch(clientsAdd(response.data))
+      } catch(err) {    
+        console.log(err);
+      }
+    }
+   fetchData();
+  }, []);
 
   const handleChange = (event) => {
     setStatus(event.target.value);
   };
-
+  const handleChangeClient = (event) => {
+    setClient(event.target.value);
+  };
 
   const handleClose = () => {
     dispatch(closeDialog('discount'));
@@ -40,7 +57,7 @@ function AddDiscount(props) {
     const discount = {
       basis: data.get('basis'),
       size: data.get('size'),
-      id_clienta: 2,
+      id_clienta: client,
       id_sotr: user.id,
       id_uslugi: status
     };
@@ -75,12 +92,27 @@ function AddDiscount(props) {
                 <InputLabel >Услуга</InputLabel>
                   <Select
                     value={status}
-                    label="Статус"
+                    label="Услуга"
                     onChange={handleChange}
                     fullWidth
                   > 
                   {services.map(({ id, name}) => {
                     return <MenuItem value={id}>{name}</MenuItem>
+                  })} 
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                <InputLabel >Клиент</InputLabel>
+                  <Select
+                    value={client}
+                    label="Клиент"
+                    onChange={handleChangeClient}
+                    fullWidth
+                  > 
+                  {clients.map(({ id, fio }) => {
+                    return <MenuItem value={id}>{fio}</MenuItem>
                   })} 
                   </Select>
                 </FormControl>

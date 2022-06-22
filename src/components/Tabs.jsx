@@ -17,6 +17,7 @@ import OrdersLayout from '../layouts/OrdersLayout';
 import ServiceLayout from '../layouts/ServiceLayout';
 import StatisticLayout from '../layouts/StatisticLayout';
 import DiscountLayout from '../layouts/DiscountLayout';
+import ClientLayout from '../layouts/ClientsLayout';
 import { changeTabname } from '../reducers/uiReducer'
 import { employeeAdd } from '../reducers/employeeReducer';
 import { stockAllAdd } from '../reducers/stockReducer';
@@ -78,7 +79,9 @@ export default function FullWidthTabs() {
       2: 'service',
       3: 'order',
       4: 'discount',
-      5: 'statistic',
+      5: 'client',
+      6: 'statistic',
+      
     }
     setValue(newValue);
     const tabname = indexToTabname[newValue];
@@ -99,6 +102,7 @@ export default function FullWidthTabs() {
           <Tab label="Услуги" {...a11yProps('service')} />
           <Tab label="Заказы" {...a11yProps('order')} />
           <Tab label="Скидки" {...a11yProps('discount')} />
+          <Tab label="Клиенты" {...a11yProps('client')} />
           <Tab label="Отчеты" {...a11yProps('order')} />
         </Tabs>
         
@@ -119,8 +123,12 @@ export default function FullWidthTabs() {
           <DiscountLayout />
         </TabPanel>
         <TabPanel value={value} index={5} dir={theme.direction}>
+          <ClientLayout />
+        </TabPanel>
+        <TabPanel value={value} index={6} dir={theme.direction}>
           <StatisticLayout />
         </TabPanel>
+        
       <AddEmployeeForm />
       <AddStockForm />
     </Box>

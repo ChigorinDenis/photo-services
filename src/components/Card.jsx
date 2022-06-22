@@ -41,7 +41,8 @@ export default function MediaCard({ card, discount }) {
           onClick={() => {
             const basketItem = {
               ...card,
-              number: 1
+              number: 1,
+              discountSize: discount?.size
             }
             dispatch(basketItemAdd(basketItem));
           }}

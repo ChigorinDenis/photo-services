@@ -9,6 +9,7 @@ import SideMenu from "../components/SideMenu";
 import Basket from '../components/Basket';
 import routes from "../routes";
 import { serviceAllAdd } from "../reducers/serviceReducer";
+import { discountAdd } from "../reducers/discountReducer";
 
 
 const featuredPosts = [
@@ -33,7 +34,7 @@ const featuredPosts = [
 const ClientPage = () => {
   const auth = useSelector(state => state.auth);
   const { clientServiceFilter } = useSelector(state => state.ui);
-  const [discounts, setDiscounts] = React.useState([])
+  const discounts = useSelector(state => state.discount);
   const services = useSelector(state => state.service);
   const filteredServices = clientServiceFilter === 'all' ? services : services.filter((f) => f.type === clientServiceFilter);
   const dispatch = useDispatch();
@@ -49,17 +50,19 @@ const ClientPage = () => {
         }
        fetchData();
       }, []);
+      
       useEffect(() => {
         const fetchData = async () => {
           try {   
             const response = await axios.get(routes('getDiscount'));    
-            setDiscounts(response.data)
+            dispatch(discountAdd(response.data));
           } catch(err) {    
             console.log(err);
           }
         }
        fetchData();
       }, []);
+
   return (
     <>
     <Box
@@ -73,7 +76,7 @@ const ClientPage = () => {
       <Container>
         <Box>
         <Typography gutterBottom variant="h5" component="div" sx={{color: 'secondary.main'}}>
-            `Добро пожаловать в мир фотографий!`
+            Добро пожаловать в мир фотографий!`
           </Typography>
           <Typography variant="body2">
           Наш фотосалон – это долгожданный момент творчества, вдохновение, радость, уникальные дизайны и невероятно красивые решения.

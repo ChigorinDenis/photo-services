@@ -33,7 +33,9 @@ const BasketServiceItem = ({ item }) => {
     number,
   } = item;
 
-  const secondary = true;
+  const secondaryText = item.discountSize ? 
+    <span><strike style={{color: 'red'}}>{`${price * number}р.`}</strike> {`${(1 - item.discountSize/100) * price * number}р.`} {`${number}шт.`}</span> :  
+    <span>{`${price * number}р. ${number}шт.`}</span>
 
   const renderControlItem = (id) => { 
     return (
@@ -87,7 +89,7 @@ const BasketServiceItem = ({ item }) => {
     </ListItemAvatar>
     <ListItemText
       primary={title}
-      secondary={secondary ? `${price * number}р. ${number}шт.` : null}
+      secondary={secondaryText}
     />
   </ListItem>
   )
