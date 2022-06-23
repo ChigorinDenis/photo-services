@@ -1,5 +1,6 @@
 import * as React from 'react';
 import MainFeaturedPost from '../components/MainFeaturedPost';
+import { useSelector } from 'react-redux';
 import { Container } from '@material-ui/core';
 // import isWeekend from 'date-fns/isWeekend';
 import TextField from '@mui/material/TextField';
@@ -17,6 +18,7 @@ import ImageBox from '../components/ImageBox'
 
 import Checkout from '../layouts/Stepper/Checkout';
 
+
 const mainFeaturedPost = {
   title: 'Фотограф Михаил',
   description:
@@ -33,46 +35,25 @@ const social = [
 ];
 
 const PortfolioPage = () => {
-
- 
+  const { selectedEmployee } = useSelector(state => state.ui)
 
   return (
     <Container>
       
       <Box sx={{display: 'flex', mt: 5, gap: 2}}>
         <div style={{width: '100%', height: '100%'}}>
-          <MainFeaturedPost  post={mainFeaturedPost} />
+          <MainFeaturedPost  post={selectedEmployee} />
         </div>
       
-      {/* <LocalizationProvider dateAdapter={AdapterDateFns} locale={ru}
-      >
-      <Box sx={{display: 'flex', flexDirection: 'column'}}>
-        <StaticDatePicker
-          ampmInClock={true}
-          openTo="day"
-          toolbarTitle="Выберите дату"
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        />
-        <Button  
-          variant="contained"
-          color='secondary'
-        >
-          Записаться
-        </Button>
-      </Box>
-    </LocalizationProvider> */}
     <Box sx={{display: 'flex', flexDirection: 'column', width: '300px', justifyContent:'flex-start', gap: 20}}>
         <Paper elevation={0} sx={{ p: 2, bgcolor: 'grey.200' }}>
           <Typography variant="h6" gutterBottom>
             Обо мне
           </Typography>
           <Typography>
-            Работаю фотографом уже более 5 лет. Профессионально подхожу к делу, ищу компромиссы в цветопередаче. 
-            Пусть ваши воспоминания будут запечатлены.
+            {/* Работаю фотографом уже более 5 лет. Профессионально подхожу к делу, ищу компромиссы в цветопередаче. 
+            Пусть ваши воспоминания будут запечатлены. */}
+            {selectedEmployee.description}
           </Typography>
         </Paper>
         

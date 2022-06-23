@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
@@ -25,6 +26,10 @@ const theme = createTheme();
 export default function Checkout() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [fotosession, setFotosession ] = React.useState({grafiks: []})
+  const { selectedEmployee } = useSelector(state => state.ui)
+  const { user } = useSelector(state => state.auth);
+  const clients = useSelector((state) => state.client);
+  const client = clients.find((f) => f.username === user?.username)
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -36,8 +41,8 @@ export default function Checkout() {
 
   const handleAddOrder = async () => {
     const order = {
-      id_sotr:7,
-      id_client: 2,
+      id_sotr: selectedEmployee.id,
+      id_client: client.id,
       id_usl: fotosession.id_usl,
       grafiks: fotosession.grafiks.map((id) => ({id}))
     }

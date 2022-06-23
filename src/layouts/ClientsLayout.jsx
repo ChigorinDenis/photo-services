@@ -17,13 +17,14 @@ import format from 'date-fns/format';
 
 
 
+
 const columns = [
   { field: 'fio', headerName: 'ФИО', width: 150 },
   { field: 'username', headerName: 'Имя пользователя', width: 150 },
   { field: 'email', headerName: 'Эл.почта', width: 150 },
   { field: 'phone', headerName: 'Номер телефона', width: 150 },
   { field: 'skidka', headerName: 'Скидка', width: 150 },
-  { field: 'basisToSkidka', headerName: 'Основание для скидки', width: 150 },
+  { field: 'basisToSkidka', headerName: 'Основание для скидки', width: 250 },
 ];
 
 
@@ -35,7 +36,7 @@ const ClientLayout = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {   
-        const response = await axios.get('http://localhost:8080/admin/get-all-clients');    
+        const response = await axios.get(routes('getClients'));    
         dispatch(clientsAdd(response.data))
       } catch(err) {    
         console.log(err);

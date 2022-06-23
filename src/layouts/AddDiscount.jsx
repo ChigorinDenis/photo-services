@@ -97,7 +97,7 @@ function AddDiscount(props) {
                     fullWidth
                   > 
                   {services.map(({ id, name}) => {
-                    return <MenuItem value={id}>{name}</MenuItem>
+                    return <MenuItem value={id} key={id}>{name}</MenuItem>
                   })} 
                   </Select>
                 </FormControl>

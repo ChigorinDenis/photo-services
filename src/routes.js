@@ -1,11 +1,13 @@
-const host = 'http://localhost:8080';
-// const host = 'http://25.63.58.40:8080';
+export const host = 'http://localhost:8080';
+//export const host = 'http://25.63.58.40:8080';
 const prefix = 'constructor';
 
 export default (name) => {
   const paths = {
     getEmployees: [host, 'admin', 'sotrudnik', 'all'].join('/'),
+    getPhotographers: [host, 'photograph', 'all-by-user-role', 'PHOTOGRAPHER'].join('/'),
     addEmployee: [host, 'admin', 'sotrudnik', 'add'].join('/'),
+    getClients: [host, 'admin','get-all-clients'].join('/'),
     getStock: [host, 'sklad', 'all'].join('/'),
     getServices: [host, 'admin', 'usluga', 'all' ].join('/'),
     getDiscount: [host, 'sotrudnik', 'skidka', 'all'].join('/'), 

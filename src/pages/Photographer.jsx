@@ -48,14 +48,15 @@ const handleOnEmail = (row) => () => {
   const data = {
       email: client?.email,
       title: "Уведомление фотосалона",
-      text: `Здравствуйте, ${client.fio}!
-      Ваши фотографии по заказу оформленному ${format(new Date(orderDate), 'dd.MM.yyyy')}г. по услуге "${usluga.name}" готовы.\n
-      Фотограф - ${sotrudnik.fio}
+      text: `Здравствуйте, ${client?.fio}!
+      Ваши фотографии по заказу оформленному ${format(new Date(orderDate), 'dd.MM.yyyy')}г. по услуге "${usluga?.name}" готовы.\n
+      Фотограф - ${sotrudnik?.fio}
       Дата ${format(new Date(), 'dd.MM.yyyy HH:mm')}`
   }
+  
   try {
     const response = axios.post('http://localhost:8080/sotrudnik/send-email', data);
-    console.log('Письмо отправлено');
+    alert('Письмо отправлено');
   }
   catch(err) {
     console.log(err)
@@ -149,11 +150,13 @@ const PhotographerPage = () => {
 
   const orders = useSelector((state) => state.order);
   const { user } = useSelector((state) => state.auth);
+  const [sotrudnik, setSotrudnik] = React.useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const responseSotr = await axios.get(`http://localhost:8080/admin/sotrudnik/by-username/${user?.username}`);
+        setSotrudnik(responseSotr.data);
         const response = await axios.get(routes('getOrders')); 
         const filtered = response.data.filter((f) => (f.sotrudnik.id === responseSotr.data.id))  
         dispatch(ordersAdd(filtered))
@@ -167,12 +170,12 @@ const PhotographerPage = () => {
   return (
     <Container>
       <Box sx={{ mt: 5, mb: 2}}>
-        <FeaturedPost  post={post[0]} portfolio={false}/>
+        <FeaturedPost  post={{...sotrudnik, ...post[0]}} portfolio={false}/>
       </Box>
       <Typography variant="h6" sx={{ mb: 2}}>Мои заказы</Typography>
       <DataTable
         columns={columns}
-        rows={orders}
+        rows={orders || []}
         onRowDoubleClick={(params) => {
           dispatch(openDialog('status'))
           dispatch(sendData({id: params.row.id }))

@@ -12,12 +12,13 @@ import { Button, Container } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import BasketServiceItem from './BasketServiceItem';
 import LocalGroceryStoreOutlinedIcon from '@mui/icons-material/LocalGroceryStoreOutlined';
-
+import { clientsAdd } from '../reducers/clientsReducer';
 import { closeDialog } from '../reducers/uiReducer';
 import routes from '../routes';
 
 
 export default function Basket(props) {
+  const { client } = props;
   const navigate = useNavigate();
   const basket = useSelector(state => state.basket);
   const auth = useSelector(state => state.auth);
@@ -34,6 +35,20 @@ export default function Basket(props) {
   const dispatch = useDispatch();
  
 
+  
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {   
+        const response = await axios.get(routes('getClients'));    
+        dispatch(clientsAdd(response.data))
+      } catch(err) {    
+        console.log(err);
+      }
+    }
+   fetchData();
+  }, []);
+
   const handleSubmit  = async (event) => {
     event.preventDefault(); 
     if (!auth.isAuth) {
@@ -45,18 +60,18 @@ export default function Basket(props) {
     const order = {
       number: item?.number,
       id_sotr: 1,
-      id_client: auth?.user?.id,
+      id_client: client.id,
       id_usligi: item.id
     }
-    
+    console.log(order);
     const url = routes('addOrder');
-    try {
-      const response = await axios.post(url, order);
-      console.log(response.data);
-      alert('Заказ оформлен')
-    } catch (e) {
-      alert(e);
-    }
+    // try {
+    //   const response = await axios.post(url, order);
+    //   console.log(response.data);
+    //   alert('Заказ оформлен')
+    // } catch (e) {
+    //   alert(e);
+    // }
    
   };
 

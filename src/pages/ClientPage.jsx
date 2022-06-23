@@ -10,33 +10,39 @@ import Basket from '../components/Basket';
 import routes from "../routes";
 import { serviceAllAdd } from "../reducers/serviceReducer";
 import { discountAdd } from "../reducers/discountReducer";
+import { employeesAdd } from "../reducers/employeeReducer";
 
 
-const featuredPosts = [
+const featuredPosts = 
   {
-    title: 'Фотограф Михаил',
     date: 'Вдохновляют улыбки людей',
     description:
       'Если вас заитересовало мое творчество, то смелее записывайтесь ко мне на фотоссесии.',
     image: '/img/photographer1.jpg',
     imageLabel: 'Image Text',
-  },
-  {
-    title: 'Фотограф ',
-    date: 'Люблю торжественные и яркие дни',
-    description:
-      'Если вас заитересовало мое творчество, то смелее записывайтесь ко мне на фотоссесии.',
-      image: '/img/photographer2.avif',
-    imageLabel: 'Image Text',
-  },
-];
+  };
+  //{
+   // title: 'Фотограф ',
+   // date: 'Люблю торжественные и яркие дни',
+    //description:
+    //  'Если вас заитересовало мое творчество, то смелее записывайтесь ко мне на фотоссесии.',
+   //   image: '/img/photographer2.avif',
+   // imageLabel: 'Image Text',
+  //},
+
 
 const ClientPage = () => {
   const auth = useSelector(state => state.auth);
   const { clientServiceFilter } = useSelector(state => state.ui);
   const discounts = useSelector(state => state.discount);
   const services = useSelector(state => state.service);
+  const employee = useSelector(state => state.employee);
+  const photographers = employee
+    .map((item) => ({...item, ...featuredPosts, title: `Фотограф ${item.fio}`}));
   const filteredServices = clientServiceFilter === 'all' ? services : services.filter((f) => f.type === clientServiceFilter);
+  const clients = useSelector((state) => state.client);
+  const client = clients.find((f) => f.username === auth?.user?.username)
+
   const dispatch = useDispatch();
   
     useEffect(() => {
@@ -56,6 +62,18 @@ const ClientPage = () => {
           try {   
             const response = await axios.get(routes('getDiscount'));    
             dispatch(discountAdd(response.data));
+          } catch(err) {    
+            console.log(err);
+          }
+        }
+       fetchData();
+      }, []);
+
+      useEffect(() => {
+        const fetchData = async () => {
+          try {   
+            const response = await axios.get(routes('getPhotographers'));   
+            dispatch(employeesAdd(response.data))
           } catch(err) {    
             console.log(err);
           }
@@ -104,14 +122,14 @@ const ClientPage = () => {
         }
         </Box>
         <Grid container spacing={4}>
-          {featuredPosts.map((post) => (
-            <FeaturedPost key={post.title} post={post} />
+          {photographers.map((post) => (
+            <FeaturedPost key={post.id} post={post} />
           ))}
         </Grid>
       </Container>
     </Box>
     <SimpleSnack isOpen={auth.isAuth} text={`Пользователь ${auth?.user?.username} авторизован`} />
-    <Basket />
+    <Basket client={client}/>
     </>
   )
 };

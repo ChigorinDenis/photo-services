@@ -4,9 +4,11 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
+import { host } from '../routes';
 
 function MainFeaturedPost(props) {
   const { post } = props;
+  console.log(post)
   return (
     <Paper
       sx={{
@@ -18,11 +20,11 @@ function MainFeaturedPost(props) {
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
-        backgroundImage: `url(${post.image})`,
+        backgroundImage: `url(${host}${post.avatarImagePath})`,
       }}
     >
       {/* Increase the priority of the hero background image */}
-      {<img  style={{width: '100%', display: 'none'}} src={post.image} alt={post.imageText} />}
+      {<img  style={{width: '100%', display: 'none'}} src={`${host}${post.avatarImagePath}`} alt={post.imageText} />}
       <Box
         sx={{
           position: 'absolute',

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
@@ -12,10 +13,12 @@ import FaceIcon from '@mui/icons-material/Face';
 import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
 import LandscapeIcon from '@mui/icons-material/Landscape';
 import { Link } from 'react-router-dom';
+import { selectEmployee } from '../reducers/uiReducer'
+import { host } from '../routes';
 
 function FeaturedPost(props) {
   const { post, portfolio = true } = props;
-
+  const dispatch = useDispatch()
   return (
     <Grid item xs={12} md={6}>
         <Card sx={{ display: 'flex' }}>
@@ -35,9 +38,11 @@ function FeaturedPost(props) {
             <Typography variant="subtitle1" paragraph>
               {post.description}
             </Typography>
-            {portfolio && <ImageBox cols={6}/>}
-            {portfolio && <Link to='/portfolio'>
-             <Typography variant="subtitle1" color="primary" >
+            {portfolio && <ImageBox cols={6} sx={{ mb: 2}}/>}
+            {portfolio && <Link to='/portfolio' >
+             <Typography variant="subtitle1" color="primary" onClick={() => {
+              dispatch(selectEmployee(post))
+            }} >
               Посмотреть подробнее...
             </Typography>
             </Link>}
@@ -45,7 +50,7 @@ function FeaturedPost(props) {
           <CardMedia
             component="img"
             sx={{ width: 160, display: { xs: 'none', sm: 'block' } }}
-            image={post.image}
+            image={`${host}${post.avatarImagePath}`}
             alt={post.imageLabel}
           />
         </Card>
