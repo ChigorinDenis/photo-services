@@ -65,13 +65,13 @@ export default function Basket(props) {
     }
     console.log(order);
     const url = routes('addOrder');
-    // try {
-    //   const response = await axios.post(url, order);
-    //   console.log(response.data);
-    //   alert('Заказ оформлен')
-    // } catch (e) {
-    //   alert(e);
-    // }
+    try {
+      const response = await axios.post(url, order);
+      console.log(response.data);
+      alert('Заказ оформлен')
+    } catch (e) {
+      alert(e);
+    }
    
   };
 
