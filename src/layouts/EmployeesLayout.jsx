@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import DataTable from '../components/DataTable';
 import Avatar from '@mui/material/Avatar';
-import Chip from '@material-ui/core/Chip';
+import Chip from '@mui/material/Chip';
 import { employeesAdd } from '../reducers/employeeReducer';
 import routes from '../routes';
 import Box from '@mui/material/Box';

@@ -18,6 +18,7 @@ export default (name) => {
     addStock: [host, 'sklad', 'add-new-item'].join('/'),
     addOrder: [host, 'client', 'add-new-zakaz' ].join('/'),
     getOrders: [host, 'client', 'get-all-zakazy'].join('/'),
+    getOrdersPhotosession: (id_sotrudnik) => ([host, 'sotrudnik', 'get-zakazy-for-photograph', '2022-05-13', '2022-06-30', id_sotrudnik].join('/')),
     addShedule: [host, 'admin', 'sotrudnik', 'add-grafik'].join('/'),
     addService: (id_sotr) => ([host, 'admin', 'usluga', 'add', id_sotr].join('/')),
     addMaterial: [host, 'admin', 'rashodnik', 'add'].join('/'), 

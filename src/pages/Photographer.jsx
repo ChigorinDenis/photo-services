@@ -157,9 +157,9 @@ const PhotographerPage = () => {
       try {
         const responseSotr = await axios.get(`http://localhost:8080/admin/sotrudnik/by-username/${user?.username}`);
         setSotrudnik(responseSotr.data);
-        const response = await axios.get(routes('getOrders')); 
-        const filtered = response.data.filter((f) => (f.sotrudnik.id === responseSotr.data.id))  
-        dispatch(ordersAdd(filtered))
+        const response = await axios.get(routes('getOrdersPhotosession')(responseSotr.data.id)); 
+        // const filtered = response.data.filter((f) => (f.sotrudnik.id === responseSotr.data.id))  
+        dispatch(ordersAdd(response.data))
       } catch(err) {    
         console.log(err);
       }
@@ -180,6 +180,7 @@ const PhotographerPage = () => {
           dispatch(openDialog('status'))
           dispatch(sendData({id: params.row.id }))
         }}
+        heightTable={'650px'}
       />
       <UpdateStatus />
     </Container>

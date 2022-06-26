@@ -3,9 +3,13 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import DataTable from '../components/DataTable';
 import { Box } from '@mui/system';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { stockAllAdd } from '../reducers/stockReducer';
 import routes from '../routes';
-import { Typography } from '@mui/material';
+import  * as XLSX from 'xlsx'
+import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
+import { Button, Typography } from '@mui/material';
 
 const columns = [
   { field: 'name', headerName: 'Название', width: 150 },
@@ -18,12 +22,50 @@ const columns = [
 const StockLayout = () => {
   const dispatch = useDispatch();
   const stock = useSelector((state) => state.stock);
+  const [alignment, setAlignment] = React.useState(30);
   const [planningStock, setPlanningStock] = React.useState([]);
+
+  const handleChange = (event, newAlignment) => {
+    setAlignment(newAlignment);
+  };
+
+  const handleOnExport = () => {
+    const calcStock = calcMaterials(planningStock, alignment)
+      .map((item) => {
+        return [
+          item.name,
+          item.type,
+          item.number,
+          item.units,
+          item.price * item.number
+        ]
+      })
+    const data = [['Название', 'Тип',  'Количество', 'Ед.изм' ,' Общая цена'], ...calcStock];
+    const wb = XLSX.utils.book_new()
+    const ws =  XLSX.utils.aoa_to_sheet(data, 'Some headers');
+    XLSX.utils.book_append_sheet(wb, ws, 'Лист1');
+    XLSX.writeFile(wb, 'Report.xlsx');
+  }
+
+  const calcMaterials = (stock, value) => {
+    if (value === 30) {
+      return stock;
+    }
+    const mapped = stock
+      .map((material) => {
+        const newValue = Math.round((material.number / 30) * value);
+        return {
+          ...material,
+          number: newValue
+        }
+      })
+    return mapped;
+  }
+
   React.useEffect(() => {
     const fetchData = async () => {
       try {   
         const response = await axios.get('http://localhost:8080/statistik/get-statik');
-        
         setPlanningStock(response.data);
       } catch(err) {    
         console.log(err);
@@ -35,8 +77,29 @@ const StockLayout = () => {
   return (
     <>
       <Box sx={{display: 'flex', mb:2 , justifyContent: 'space-between'}}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
         <Typography variant='h6'  >Расходные материалы</Typography>
-        <Typography variant='h6'   >Планируемая закупка материалов</Typography>
+        <Button variant='outlined' color="secondary" endIcon={<RequestQuoteIcon />} onClick={handleOnExport}>Заявка на закупку</Button>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end'}}>
+          <Typography variant='h6' >Планируемая закупка материалов</Typography>
+          <ToggleButtonGroup
+            color="secondary"
+            size='small'
+           
+            value={alignment}
+            exclusive
+            onChange={handleChange}
+          >
+            <ToggleButton value={10} >10 дней</ToggleButton>
+            <ToggleButton value={15} >15 дней</ToggleButton>
+            <ToggleButton value={30}>Месяц</ToggleButton>
+            <ToggleButton value={90}>3 Месяца</ToggleButton>
+            
+          </ToggleButtonGroup>
+          
+        </div>
+        
         
       </Box>
       <Box
@@ -53,7 +116,7 @@ const StockLayout = () => {
        
           <DataTable
             columns={columns}
-            rows={planningStock}
+            rows={calcMaterials(planningStock, alignment)}
             heightTable={'650px'}
           />
       

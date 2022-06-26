@@ -87,7 +87,7 @@ const columns = [
           },
           text: 'Выполнено'
         },
-        PERFORMED: {
+        CANCELED: {
           style: {
             borderColor: '#ef5350', 
             color: '#ef5350'

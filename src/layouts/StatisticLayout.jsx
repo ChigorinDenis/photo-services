@@ -1,34 +1,30 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
+
 import DataTable from '../components/DataTable';
-import Avatar from '@mui/material/Avatar';
-import { employeesAdd } from '../reducers/employeeReducer';
+
 import routes from '../routes';
 import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import GroupIcon from '@mui/icons-material/Group';
+
 import Button from '@mui/material/Button';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import  * as XLSX from 'xlsx'
-import ToggleButton from '@mui/material/ToggleButton';
+
 
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { format } from 'date-fns';
 import {  id, ru } from 'date-fns/locale'
-import { TextField } from '@material-ui/core';
+import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import ChartLayout from './ChartLayout';
-import { Chip } from '@material-ui/core';
-import { ordersAdd } from '../reducers/ordersReducer';
+
 
 
 
@@ -82,6 +78,12 @@ const incomeExpenseColumns = [
   { field: 'income', headerName: 'Доход', width: 300},
   { field: 'expense', headerName: 'Расход', width: 300},
 ]
+const materialsColumn = [
+  { field: 'name', headerName: 'Название', width: 300},
+  { field: 'type', headerName: 'Тип', width: 300},
+  { field: 'number', headerName: 'Расход материалов', width: 300},
+  { field: 'units', headerName: 'Ед.изм.', width: 300}
+]
 
 const convertToExport = (reportName, reportData) => {
   const mapConvert = {
@@ -108,6 +110,10 @@ const convertToExport = (reportName, reportData) => {
     incomeExpense: {
       headers: ['Дата', 'Доход', 'Расход'],
       fields: ['date', 'income', 'expense'],
+    },
+    materials: {
+      headers: ['Название', 'Тип', 'Расход материалов', 'Ед.изм.'],
+      fields: ['name', 'type', 'number', 'units'],
     },
   }
   const mapped = mapConvert[reportName]
@@ -148,6 +154,11 @@ const mapURL = {
     url: (dateStart, dateEnd) => (routes('getIncomeExpense')(dateStart, dateEnd)),
     columns:  incomeExpenseColumns,
     date: true,
+  },
+  materials: {
+    url: (dateStart, dateEnd) =>  (`http://localhost:8080/admin/get-consumption-between-dates/${dateStart}/${dateEnd}`),
+    columns: materialsColumn,
+    date: true
   }
 }
 
@@ -226,6 +237,7 @@ const StatisticLayout = () => {
             <MenuItem value={'currentIncome'}>Отчет по доходу фотосалона за текущий год</MenuItem>
             <MenuItem value={'servicesByDate'}>Отчет оказанным услугам за опледеленный период</MenuItem>
             <MenuItem value={'salary'}>Расчет заработной платы за период</MenuItem>
+            <MenuItem value={'materials'}> Отчет по расходу и остатку материалов</MenuItem>
             <MenuItem value={'incomeExpense'}>Доход и расход по дням за период</MenuItem>
           </Select>
         </FormControl>

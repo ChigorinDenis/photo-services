@@ -3,17 +3,13 @@ import axios from 'axios';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { Box, Chip } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { format } from 'date-fns';
+import { format, addHours } from 'date-fns';
 import {  ru } from 'date-fns/locale'
-import { Stack } from '@mui/material';
+
 
 export default function PaymentForm(props) {
   const [value, setValue] = React.useState(new Date());
@@ -39,7 +35,15 @@ export default function PaymentForm(props) {
     const tommorow = new Date(value.getFullYear(), value.getMonth(), value.getDate() + 1)
     try {
       const response = await axios.get(`http://localhost:8080/admin/sotrudnik/7/get-grafik/from/${format(value, 'dd.MM.yyyy')}/to/${format(tommorow, 'dd.MM.yyyy')}`);
-      const times =  response.data.map((item) => ({id: item.id, time: format(new Date(item.data), 'hh:mm'), type: item.type}))
+      const times =  response.data.map((item) => {
+        const startDate = new Date(item.data)
+        const endDate =  addHours(startDate, 1);
+        const time = `${format(startDate, 'HH:mm')}-${format(endDate, 'HH:mm')}`
+        return {
+          id: item.id,
+          time,
+          type: item.type
+        }})
       setTimes(times);
     } catch (error) {
       console.log(error)

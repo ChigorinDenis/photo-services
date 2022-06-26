@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
+import { Button } from '@mui/material';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -15,9 +17,11 @@ import LandscapeIcon from '@mui/icons-material/Landscape';
 import { Link } from 'react-router-dom';
 import { selectEmployee } from '../reducers/uiReducer'
 import { host } from '../routes';
+import { Box } from '@material-ui/core';
 
 function FeaturedPost(props) {
   const { post, portfolio = true } = props;
+  const navigate = useNavigate();
   const dispatch = useDispatch()
   return (
     <Grid item xs={12} md={6}>
@@ -38,14 +42,29 @@ function FeaturedPost(props) {
             <Typography variant="subtitle1" paragraph>
               {post.description}
             </Typography>
-            {portfolio && <ImageBox cols={6} sx={{ mb: 2}}/>}
-            {portfolio && <Link to='/portfolio' >
-             <Typography variant="subtitle1" color="primary" onClick={() => {
-              dispatch(selectEmployee(post))
-            }} >
-              Посмотреть подробнее...
-            </Typography>
-            </Link>}
+
+            {portfolio &&<Box sx={{ display: 'flex', gap: 5}}>
+              <Button
+                variant='outlined'
+                color="secondary"
+                onClick={() => {
+                  dispatch(selectEmployee(post));
+                  navigate('/portfolio')
+                }}
+              >
+                Портфолио
+              </Button>
+              <Button
+                variant='contained'
+                color="primary"
+                sx={{ color: 'white' }}
+                onClick={() => {
+                  dispatch(selectEmployee(post));
+                }}
+              >
+                Выбрать
+              </Button>
+            </Box>}
           </CardContent>
           <CardMedia
             component="img"

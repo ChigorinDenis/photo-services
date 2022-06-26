@@ -36,9 +36,9 @@ const ClientPage = () => {
   const { clientServiceFilter } = useSelector(state => state.ui);
   const discounts = useSelector(state => state.discount);
   const services = useSelector(state => state.service);
-  const employee = useSelector(state => state.employee);
-  const photographers = employee
-    .map((item) => ({...item, ...featuredPosts, title: `Фотограф ${item.fio}`}));
+  // const employee = useSelector(state => state.employee);
+  // const photographers = employee
+  //   .map((item) => ({...item, ...featuredPosts, title: `Фотограф ${item.fio}`}));
   const filteredServices = clientServiceFilter === 'all' ? services : services.filter((f) => f.type === clientServiceFilter);
   const clients = useSelector((state) => state.client);
   const client = clients.find((f) => f.username === auth?.user?.username)
@@ -121,11 +121,11 @@ const ClientPage = () => {
         })
         }
         </Box>
-        <Grid container spacing={4}>
+        {/* <Grid container spacing={4}>
           {photographers.map((post) => (
             <FeaturedPost key={post.id} post={post} />
           ))}
-        </Grid>
+        </Grid> */}
       </Container>
     </Box>
     <SimpleSnack isOpen={auth.isAuth} text={`Пользователь ${auth?.user?.username} авторизован`} />

@@ -6,6 +6,7 @@ import AdminPage from './pages/AdminPage';
 import ClientPage from './pages/ClientPage';
 import PhotographerPage from './pages/Photographer';
 import PortfolioPage from './pages/PortfolioPage';
+import Photosession from './pages/Photosession';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import Header from './components/Header';
@@ -46,12 +47,13 @@ export default () => {
     <ThemeProvider theme={theme}>
       <Header />
       <Routes>
-        <Route path='/admin' element={<ClientPage />}></Route>
-        <Route path='/' element={<AdminPage />}></Route>
+        <Route path='/' element={<ClientPage />}></Route>
+        <Route path='/admin' element={<AdminPage />}></Route>
         <Route path='/photographer' element={<PhotographerPage />}></Route>
         <Route path='/portfolio' element={<PortfolioPage />}></Route>
         <Route path='/login' element={<SignIn />}></Route>
         <Route path='/registration' element={<SignUp />}></Route>
+        <Route path='/photosession' element={<Photosession />}></Route>
         <Route
           path="*"
           element={<Navigate to="/" replace />}

@@ -16,6 +16,7 @@ const initialState = {
   dialogsData: {},
   activeTabname: 'employee',
   selectedEmployee: {},
+  selectedService: {},
   clientServiceFilter: 'all',
 };
 
@@ -61,6 +62,12 @@ export const uiSlice = createSlice({
         selectedEmployee: payload
       }
     },
+    selectService: (state, { payload }) => {
+      return {
+        ...state,
+        selectedService: payload
+      }
+    },
     setClientServiceFilter: (state, { payload }) => {
       return {
         ...state,
@@ -70,6 +77,14 @@ export const uiSlice = createSlice({
   }
 });
 
-export const { openDialog, closeDialog, changeTabname, selectEmployee, sendData, setClientServiceFilter } = uiSlice.actions;
+export const { 
+  openDialog,
+  closeDialog,
+  changeTabname,
+  selectEmployee,
+  selectService,
+  sendData,
+  setClientServiceFilter
+} = uiSlice.actions;
 
 export default uiSlice.reducer;

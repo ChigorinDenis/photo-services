@@ -8,7 +8,6 @@ import { host } from '../routes';
 
 function MainFeaturedPost(props) {
   const { post } = props;
-  console.log(post)
   return (
     <Paper
       sx={{
@@ -45,7 +44,7 @@ function MainFeaturedPost(props) {
               mt: 30
             }}
           >
-            <Typography component="h1" variant="h3" color="inherit" gutterBottom>
+            <Typography component="h1" variant="h4" color="inherit" gutterBottom>
               {post.title}
             </Typography>
             <Typography variant="h5" color="inherit" paragraph>
