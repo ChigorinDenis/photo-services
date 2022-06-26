@@ -7,7 +7,7 @@ import GetAppIcon from '@mui/icons-material/GetApp';
 
 
 export default function DataTable(props) {
-  const { rows, columns, onRowClick, ExportButton, onRowDoubleClick} = props;
+  const { rows, columns, onRowClick, ExportButton, onRowDoubleClick, rowHeight , heightTable} = props;
 
   const Toolbar = () => {
     return (
@@ -25,7 +25,7 @@ export default function DataTable(props) {
     )
   }
   return (
-    <div style={{ height: 650, width: '100%' }}>
+    <div style={{ height: heightTable, width: '100%' }}>
       <DataGrid
         rows={rows}
         columns={columns}
@@ -40,7 +40,7 @@ export default function DataTable(props) {
         onRowDoubleClick={(params, event) => {
           onRowDoubleClick && onRowDoubleClick(params)
         }}
-        rowHeight={80}
+        rowHeight={rowHeight || 50}
       />
     </div>
   );

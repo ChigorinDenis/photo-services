@@ -1,4 +1,5 @@
-import React from "react";
+import React, {useEffect} from "react";
+import axios from "axios";
 import Tabs from '../components/Tabs';
 import Button from '@mui/material/Button';
 import Typography  from "@mui/material/Typography";
@@ -7,6 +8,8 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDispatch, useSelector } from 'react-redux';
 import { openDialog } from "../reducers/uiReducer";
+import routes from "../routes";
+import { ordersAdd } from "../reducers/ordersReducer";
 
 const AdminPage = () => {
   const dispatch = useDispatch();
@@ -14,6 +17,19 @@ const AdminPage = () => {
   const handleOpenDialog = () => {
     dispatch(openDialog(activeTabname));
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {   
+        const response = await axios.get(routes('getOrders'));    
+        dispatch(ordersAdd(response.data));
+      } catch(err) {    
+        console.log(err);
+      }
+    }
+   fetchData();
+  }, []);
+
   return (
     <>
       <Box

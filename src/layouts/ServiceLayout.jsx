@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import Grid from '@mui/material/Grid';
 import AddService from "./AddService";
 import AddMaterial from "./AddMaterial";
 import DataTable from "../components/DataTable";
@@ -13,6 +14,7 @@ import routes from "../routes";
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import { Badge, IconButton, ListItemButton, ListSubheader, Typography } from "@mui/material";
 import { openDialog, sendData } from "../reducers/uiReducer";
+import ChartLayout from "./ChartLayout";
 
 const columns = [
     { field: 'id', headerName: 'id', width: 150 },
@@ -61,19 +63,26 @@ const ServiceLayout = () => {
     }
 
     return (
-        <>
-          <Box
-            sx={{
-              display: 'flex',
-              gap: 5
-            }}
-          >
+      <>
+        <Grid container spacing={2}>
+          <Grid item xs={9}>
             <DataTable
               columns={columns}
               rows={services}
               onRowClick={handleRowClick}
+              heightTable='100%'
             />
-            <List 
+          </Grid>
+          <Grid item xs={3}>
+            <ChartLayout  type={'service'}/>
+          </Grid>
+        </Grid>
+        <AddService />
+        <AddMaterial />
+      </>
+    )
+            
+            {/* <List 
               sx={{
                 minWidth: '300px',
                 bgcolor: 'background.paper',
@@ -100,13 +109,8 @@ const ServiceLayout = () => {
                 }) 
               }
               {materials.length ===0 && <Typography variant="body2" sx={{ml: 5, mt: 5}}>Нет расходников</Typography>}
-            </List>
-          </Box>
-          <AddService />
-          <AddMaterial />
-        </>
-        
-    )
+            </List> */}     
+    
 }
 
 export default ServiceLayout;

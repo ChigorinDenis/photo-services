@@ -5,7 +5,7 @@ import DataTable from '../components/DataTable';
 import Avatar from '@mui/material/Avatar';
 import { employeesAdd } from '../reducers/employeeReducer';
 import routes from '../routes';
-
+import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import GroupIcon from '@mui/icons-material/Group';
@@ -26,6 +26,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import ChartLayout from './ChartLayout';
 import { Chip } from '@material-ui/core';
 import { ordersAdd } from '../reducers/ordersReducer';
 
@@ -53,14 +54,14 @@ const currentIncomeColumns = [
 ];
 const freqClientColumns = [
   { field: 'fio', headerName: 'Клиент', width: 300},
-  { field: 'lastZakazDate', headerName: 'Дата последнего заказа', width: 300, renderCell: (params) => {
+  { field: 'lastZakazDate', headerName: 'Дата оплаты последнего заказа', width: 300, renderCell: (params) => {
     return format(new Date(params.row.lastZakazDate), 'dd.MM.yyyy')
   }},
-  { headerName: 'Время последнего заказа', width: 300,
+  { headerName: 'Время оплаты последнего заказа', width: 300,
   renderCell: (params) => {
     return format(new Date(params.row.lastZakazDate), 'HH:mm')
   }},
-  { field: 'num', headerName: 'Количество заказов', width: 300 },
+  { field: 'num', headerName: 'Частота обращений', width: 300 },
 ];
 
 const salaryColumns = [
@@ -76,6 +77,12 @@ const salaryColumns = [
   { field: 'zarplata', headerName: 'Зарплата', width: 200},
 ];
 
+const incomeExpenseColumns = [
+  { field: 'date', headerName: 'Дата', width: 300},
+  { field: 'income', headerName: 'Доход', width: 300},
+  { field: 'expense', headerName: 'Расход', width: 300},
+]
+
 const convertToExport = (reportName, reportData) => {
   const mapConvert = {
     mostService: {
@@ -83,7 +90,7 @@ const convertToExport = (reportName, reportData) => {
       fields: ['name', 'type', 'price', 'num'],
     },
     freqClient: {
-      headers: ['Клиент', 'Дата и время последнего заказа', 'Количество заказов'],
+      headers: ['Клиент', 'Дата и время оплаты последнего заказа', 'Частота обращения'],
       fields: ['fio', 'lastZakazDate', 'num'],
     },
     currentIncome: {
@@ -97,6 +104,10 @@ const convertToExport = (reportName, reportData) => {
     salary: {
       headers: ['ФИО', 'Должность', 'Оклад', 'Премия', 'Часы', 'Зарплата'],
       fields: ['fio', 'post', 'oklad', 'premiya', 'hours','zarplata'],
+    },
+    incomeExpense: {
+      headers: ['Дата', 'Доход', 'Расход'],
+      fields: ['date', 'income', 'expense'],
     },
   }
   const mapped = mapConvert[reportName]
@@ -133,6 +144,11 @@ const mapURL = {
     columns:  salaryColumns,
     date: true,
   },
+  incomeExpense: {
+    url: (dateStart, dateEnd) => (routes('getIncomeExpense')(dateStart, dateEnd)),
+    columns:  incomeExpenseColumns,
+    date: true,
+  }
 }
 
 const StatisticLayout = () => {
@@ -146,11 +162,18 @@ const StatisticLayout = () => {
   const handleOnExport = () => {
     const data = convertToExport(name, rows)
     const wb = XLSX.utils.book_new()
-    const ws =  XLSX.utils.aoa_to_sheet(data);
-   
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    const ws =  XLSX.utils.aoa_to_sheet(data, 'Some headers');
+    XLSX.utils.book_append_sheet(wb, ws, 'Лист1');
     XLSX.writeFile(wb, 'Report.xlsx');
   }
+  // const handleOnServerExport = () => {
+  //   const url = routes('getIncomeExpenseExcel')(dateStart, dateEnd);
+  //   try {
+  //     const response = axios.get(url)
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
   const ExportButton = () => {
     return <Button variant='contained' startIcon={<GetAppIcon />} color='secondary' size='small' onClick={handleOnExport}>Экспорт</Button>
   }
@@ -171,7 +194,7 @@ const StatisticLayout = () => {
     }
     try {   
       const response = await axios.get(url);
-      if (name === 'currentIncome') {
+      if (name === 'currentIncome' || name === 'incomeExpense') {
         const statistic = response.data.map((item, id) => ({id, ...item}));
         setRows(statistic);
       }
@@ -203,6 +226,7 @@ const StatisticLayout = () => {
             <MenuItem value={'currentIncome'}>Отчет по доходу фотосалона за текущий год</MenuItem>
             <MenuItem value={'servicesByDate'}>Отчет оказанным услугам за опледеленный период</MenuItem>
             <MenuItem value={'salary'}>Расчет заработной платы за период</MenuItem>
+            <MenuItem value={'incomeExpense'}>Доход и расход по дням за период</MenuItem>
           </Select>
         </FormControl>
         {setting.date && <>
@@ -249,11 +273,19 @@ const StatisticLayout = () => {
   return (
     <>
       <SelectStatisticBlock />
-      <DataTable
-        columns={setting.columns || []}
-        rows={rows || []}
-        ExportButton={ExportButton}
-      />
+      <Grid container spacing={2}>
+          <Grid item xs={name === 'incomeExpense'? 6 : 12}>
+            <DataTable
+              columns={setting.columns || []}
+              rows={rows || []}
+              ExportButton={ExportButton}
+              heightTable={'650px'}
+            />
+          </Grid>
+          {name === 'incomeExpense' && <Grid item xs={6}>
+            <ChartLayout  type={'income'} dataIncome={rows} />
+          </Grid>}
+      </Grid>
     </>
   )
 }

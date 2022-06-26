@@ -46,8 +46,8 @@ export default () => {
     <ThemeProvider theme={theme}>
       <Header />
       <Routes>
-        <Route path='/' element={<ClientPage />}></Route>
-        <Route path='/admin' element={<AdminPage />}></Route>
+        <Route path='/admin' element={<ClientPage />}></Route>
+        <Route path='/' element={<AdminPage />}></Route>
         <Route path='/photographer' element={<PhotographerPage />}></Route>
         <Route path='/portfolio' element={<PortfolioPage />}></Route>
         <Route path='/login' element={<SignIn />}></Route>

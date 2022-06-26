@@ -5,6 +5,7 @@ import DataTable from '../components/DataTable';
 import Avatar from '@mui/material/Avatar';
 import AddDiscount from './AddDiscount';
 import routes from '../routes';
+import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -13,17 +14,18 @@ import Button from '@mui/material/Button';
 import ToggleButton from '@mui/material/ToggleButton';
 import { Chip } from '@material-ui/core';
 import { clientsAdd } from '../reducers/clientsReducer';
+import ChartLayout from './ChartLayout';
 import format from 'date-fns/format';
 
 
 
 
 const columns = [
-  { field: 'fio', headerName: 'ФИО', width: 150 },
+  { field: 'fio', headerName: 'ФИО', width: 300 },
   { field: 'username', headerName: 'Имя пользователя', width: 150 },
   { field: 'email', headerName: 'Эл.почта', width: 150 },
   { field: 'phone', headerName: 'Номер телефона', width: 150 },
-  { field: 'skidka', headerName: 'Скидка', width: 150 },
+  { field: 'skidka', headerName: 'Скидка', width: 100 },
   { field: 'basisToSkidka', headerName: 'Основание для скидки', width: 250 },
 ];
 
@@ -46,10 +48,18 @@ const ClientLayout = () => {
   }, []);
   return (
     <>
-      <DataTable
-        columns={columns}
-        rows={client}
-      />
+    <Grid container spacing={2}>
+      <Grid item xs={8}>
+        <DataTable
+          columns={columns}
+          rows={client}
+          heightTable={'650px'}
+        />
+      </Grid>
+      <Grid item xs={4}>
+        <ChartLayout  type={'client'}/>
+      </Grid>
+      </Grid>
       <AddDiscount />
     </>
   )

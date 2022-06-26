@@ -184,17 +184,17 @@ const OrdersLayout = () => {
     XLSX.writeFile(wb, 'Report.xlsx');
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {   
-        const response = await axios.get(routes('getOrders'));    
-        dispatch(ordersAdd(response.data));
-      } catch(err) {    
-        console.log(err);
-      }
-    }
-   fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {   
+  //       const response = await axios.get(routes('getOrders'));    
+  //       dispatch(ordersAdd(response.data));
+  //     } catch(err) {    
+  //       console.log(err);
+  //     }
+  //   }
+  //  fetchData();
+  // }, []);
   return (
     <>
       <Box sx={{ display: 'flex', mb: 2}}>
@@ -219,6 +219,7 @@ const OrdersLayout = () => {
           dispatch(openDialog('status'))
           dispatch(sendData({id: params.row.id }))
         }}
+        heightTable={'650px'}
         ExportButton={ExportButton}
       />
       <UpdateStatus />

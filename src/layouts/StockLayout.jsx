@@ -48,11 +48,13 @@ const StockLayout = () => {
         <DataTable
           columns={columns}
           rows={stock}
+          heightTable={'650px'}
         />
        
           <DataTable
             columns={columns}
             rows={planningStock}
+            heightTable={'650px'}
           />
       
       </Box>

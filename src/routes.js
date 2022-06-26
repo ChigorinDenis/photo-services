@@ -13,6 +13,8 @@ export default (name) => {
     getDiscount: [host, 'sotrudnik', 'skidka', 'all'].join('/'), 
     getShedules: (id, date) => ([host, 'admin', 'sotrudnik', id, 'get-grafik', 'from', date].join('/')),
     getRangeShedules: (id, date1, date2) => ([host, 'admin', 'sotrudnik', id, 'get-grafik', 'from', date1, 'to', date2].join('/')),
+    getIncomeExpense: (date1, date2) => ([host, 'admin', 'get-income-expense-by-date', date1, date2].join('/')),
+    getIncomeExpenseExcel: (date1, date2) => ([host, 'admin', 'print-income-expense-by-date', date1, date2].join('/')),
     addStock: [host, 'sklad', 'add-new-item'].join('/'),
     addOrder: [host, 'client', 'add-new-zakaz' ].join('/'),
     getOrders: [host, 'client', 'get-all-zakazy'].join('/'),

@@ -187,6 +187,8 @@ const EmployeesLayout = () => {
       <DataTable
         columns={graphIsOpen ? columnsGraph : columnsInfo}
         rows={graphIsOpen ? shedule : employees }
+        rowHeight={80}
+        heightTable={'650px'}
       />
       <AddSheduleForm />
     </>

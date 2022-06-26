@@ -62,6 +62,7 @@ const DiscountLayout = () => {
       <DataTable
         columns={columns}
         rows={discount}
+        heightTable={'650px'}
       />
       <AddDiscount />
     </>
