@@ -81,7 +81,6 @@ export default function SignIn() {
               fullWidth
               label="Имя пользователя"
               name="username"
-              defaultValue="misha"
               autoComplete="username"
             />
             <TextField
@@ -90,7 +89,6 @@ export default function SignIn() {
               fullWidth
               name="password"
               label="Пароль"
-              defaultValue={111}
               type="password"
               autoComplete="current-password"
             />
