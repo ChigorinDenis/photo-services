@@ -7,6 +7,7 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { stockAllAdd } from '../reducers/stockReducer';
 import routes from '../routes';
+import { format } from 'date-fns';
 import  * as XLSX from 'xlsx'
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import { Button, Typography } from '@mui/material';
@@ -40,17 +41,19 @@ const StockLayout = () => {
           item.price * item.number
         ]
       })
-    const data = [['Название', 'Тип',  'Количество', 'Ед.изм' ,' Общая цена'], ...calcStock];
+    
+    const today = format(new Date, 'dd.MM.yyyy');
+    const title = `Заявка на закупку расходных материалов от ${today}`;
+    const data = [[title],['Название', 'Тип',  'Количество', 'Ед.изм' ,' Общая цена'], ...calcStock];
     const wb = XLSX.utils.book_new()
-    const ws =  XLSX.utils.aoa_to_sheet(data, 'Some headers');
+    const ws =  XLSX.utils.aoa_to_sheet(data);
+    const merges = [{ e: { c: 4, r: 0}, s: { c: 0, r: 0}}];
+    ws['!merges'] = merges;
     XLSX.utils.book_append_sheet(wb, ws, 'Лист1');
-    XLSX.writeFile(wb, 'Report.xlsx');
+    XLSX.writeFile(wb, `${title}.xlsx`);
   }
 
   const calcMaterials = (stock, value) => {
-    if (value === 30) {
-      return stock;
-    }
     const mapped = stock
       .map((material) => {
         const newValue = Math.round((material.number / 30) * value);

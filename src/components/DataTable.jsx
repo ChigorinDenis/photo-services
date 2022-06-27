@@ -14,12 +14,12 @@ export default function DataTable(props) {
       <Box
       sx={{
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
         mt:2,
-        mr:2
+        mr:2,
       }}
       >
-        <GridToolbar />
+        {/* <GridToolbar /> */}
         {ExportButton && ExportButton()}
       </Box>
     )

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import axios from 'axios';
 
 import DataTable from '../components/DataTable';
@@ -24,7 +24,8 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import ChartLayout from './ChartLayout';
-
+import { Link } from '@mui/material';
+import fileDownload from 'js-file-download';
 
 
 
@@ -37,9 +38,9 @@ const mostServiceColumns = [
 ];
 const servicesByDateColumns = [
   { field: 'name', headerName: 'Услуга', width: 250},
-  { field: 'type', headerName: 'Тип услуги', width: 250},
   { field: 'price', headerName: 'Цена', width: 250 },
   { field: 'num', headerName: 'Количество обращений', width: 250 },
+  { field: 'total', headerName: 'Общая стоимость', width: 250 },
 ];
 const currentIncomeColumns = [
   { field: 'month', headerName: 'Месяц', width: 300},
@@ -90,30 +91,37 @@ const convertToExport = (reportName, reportData) => {
     mostService: {
       headers: ['Услуга', 'Тип услуги', 'Цена', 'Количество обращений'],
       fields: ['name', 'type', 'price', 'num'],
+      
     },
     freqClient: {
       headers: ['Клиент', 'Дата и время оплаты последнего заказа', 'Частота обращения'],
       fields: ['fio', 'lastZakazDate', 'num'],
+      
     },
     currentIncome: {
       headers: ['Месяц', 'Количество услуг', 'Доход'],
       fields: ['month', 'num', 'total'],
+      
     },
     servicesByDate: {
       headers: ['Услуга', 'Цена', 'Количество'],
       fields: ['name', 'price', 'num'],
+      
     },
     salary: {
       headers: ['ФИО', 'Должность', 'Оклад', 'Премия', 'Часы', 'Зарплата'],
       fields: ['fio', 'post', 'oklad', 'premiya', 'hours','zarplata'],
+      title: 'Расчет заработной платы за период'
     },
     incomeExpense: {
       headers: ['Дата', 'Доход', 'Расход'],
       fields: ['date', 'income', 'expense'],
+      
     },
     materials: {
       headers: ['Название', 'Тип', 'Расход материалов', 'Ед.изм.'],
       fields: ['name', 'type', 'number', 'units'],
+      
     },
   }
   const mapped = mapConvert[reportName]
@@ -127,38 +135,51 @@ const convertToExport = (reportName, reportData) => {
 const mapURL = {
   mostService: {
     url: 'http://localhost:8080/admin/get-statistic-by-uslugi',
+    urlFile: 'http://localhost:8080/admin/print-statistic-by-uslugi',
     date: false,
-    columns: mostServiceColumns
+    columns: mostServiceColumns,
+    title: 'Отчет по наиболее востребованным услугам'
   },
   freqClient: {
     url: 'http://localhost:8080/admin/get-statistic-by-clients',
+    urlFile: 'http://localhost:8080/admin/print-get-statistic-by-clients',
     columns: freqClientColumns,
     date: false,
+    title: 'Отчет по частоте обращения клиентов, последние заказы'
   },
   currentIncome: {
     url: 'http://localhost:8080/admin/usluga/statistic-by-year/2022',
+    urlFile: 'http://localhost:8080/admin/usluga/print-statistic-by-year/2022',
     columns: currentIncomeColumns,
     date: false,
+    title: 'Отчет по доходу фотосалона за текущий год'
   },
   servicesByDate: {
     url: (dateStart, dateEnd) => (`http://localhost:8080/admin/usluga/statistic-by-date/${dateStart}/${dateEnd}`),
+    urlFile: (dateStart, dateEnd) => (`http://localhost:8080/admin/usluga/print-statistic-by-date/${dateStart}/${dateEnd}`),
     columns:  servicesByDateColumns,
     date: true,
+    title: 'Отчет оказанным услугам за опледеленный период'
   },
   salary: {
     url: (dateStart, dateEnd) => (`http://localhost:8080/admin/get-zarplata-table/${dateStart}/${dateEnd}`),
+    urlFile: (dateStart, dateEnd) => (`http://localhost:8080/admin/print-zarplata-table/${dateStart}/${dateEnd}`),
     columns:  salaryColumns,
     date: true,
   },
   incomeExpense: {
     url: (dateStart, dateEnd) => (routes('getIncomeExpense')(dateStart, dateEnd)),
+    urlFile: (dateStart, dateEnd) => (routes('getIncomeExpenseExcel')(dateStart, dateEnd)),
     columns:  incomeExpenseColumns,
     date: true,
+    title: 'Доходы и расходы фотосалона'
   },
   materials: {
     url: (dateStart, dateEnd) =>  (`http://localhost:8080/admin/get-consumption-between-dates/${dateStart}/${dateEnd}`),
+    urlFile: (dateStart, dateEnd) =>  (`http://localhost:8080/admin/print-consumption-between-dates/${dateStart}/${dateEnd}`),
     columns: materialsColumn,
-    date: true
+    date: true,
+    title: 'Отчет по расходу и остатку материалов'
   }
 }
 
@@ -168,25 +189,45 @@ const StatisticLayout = () => {
   const [name, setName] = React.useState('');
   const [dateStart, setDateStart] = React.useState(new Date());
   const [dateEnd, setDateEnd] = React.useState(new Date());
-
+  const linkEl = useRef(null);
 
   const handleOnExport = () => {
     const data = convertToExport(name, rows)
     const wb = XLSX.utils.book_new()
     const ws =  XLSX.utils.aoa_to_sheet(data, 'Some headers');
+    const merges = [{ e: { c: 5, r: 0}, s: { c: 0, r: 0}}];
+    ws['!merges'] = merges;
     XLSX.utils.book_append_sheet(wb, ws, 'Лист1');
     XLSX.writeFile(wb, 'Report.xlsx');
   }
-  // const handleOnServerExport = () => {
-  //   const url = routes('getIncomeExpenseExcel')(dateStart, dateEnd);
-  //   try {
-  //     const response = axios.get(url)
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }
+  const handleOnServerExport =  () => {
+    let urlFile;
+    if (setting.date) {
+      urlFile = setting.urlFile(format(dateStart, 'yyyy-MM-dd'), format(dateEnd, 'yyyy-MM-dd'))
+    }
+    else {
+      urlFile = setting.urlFile;
+    }
+    // const url = routes('getIncomeExpenseExcel')(format(dateStart, 'yyyy-MM-dd'), format(dateEnd, 'yyyy-MM-dd'));
+    // const url = 'http://localhost:8080/admin/get-consumption-between-dates/2022-06-13/2022-06-20'
+    try {
+      axios({
+        url: urlFile,
+        method: 'POST',
+        responseType: 'blob', // Important
+      }).then(({ data: blob}) => {
+        const url = URL.createObjectURL(blob);
+        linkEl.current.href = url;
+        linkEl.current.download = `${setting.title}.xlsx`;
+        linkEl.current.click();
+      });
+      
+    } catch (err) {
+      console.log(err)
+    }
+  }
   const ExportButton = () => {
-    return <Button variant='contained' startIcon={<GetAppIcon />} color='secondary' size='small' onClick={handleOnExport}>Экспорт</Button>
+    return <Button variant='contained' startIcon={<GetAppIcon />} color='secondary' size='small' onClick={handleOnServerExport}>Экспорт</Button>
   }
   const handleChange = (event) => {
     setRows([])
@@ -285,6 +326,8 @@ const StatisticLayout = () => {
   return (
     <>
       <SelectStatisticBlock />
+      <Link href='#' sx={{display: 'none'}} ref={linkEl}>Скачать</Link>
+      
       <Grid container spacing={2}>
           <Grid item xs={name === 'incomeExpense'? 6 : 12}>
             <DataTable

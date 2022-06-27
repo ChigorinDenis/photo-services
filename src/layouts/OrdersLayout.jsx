@@ -40,12 +40,12 @@ const columns = [
       </Box>
     )
   } },
-  { field: 'usluga', headerName: 'Услуга', width: 150, renderCell: (params) => {
+  { field: 'usluga', headerName: 'Услуга', width: 250, renderCell: (params) => {
     return params.row.usluga.name;
   } },
   { field: 'number', headerName: 'Количество', },
   { field: 'totalPrice', headerName: 'Итоговая цена', width: 150 },
-  { field: 'sotrudnik', headerName: 'Сотрудник', width: 150, renderCell: (params) => {
+  { field: 'sotrudnik', headerName: 'Сотрудник', width: 250, renderCell: (params) => {
     return params.row.sotrudnik.fio;
   } },
   { field: 'issueDate', headerName: 'Дата выполнения', width: 150, renderCell: (params) => {
@@ -160,6 +160,19 @@ const OrdersLayout = () => {
       headers: ['Дата заказа', 'Клиент', 'Услуга', 'Дата и время выполнения', 'Дата и время выдачи', 'Фотограф', 'Сумма'],
       fields: ['orderDate', ' client', 'usluga', 'issueDate', 'completeDate', 'sotrudnik', 'totalPrice'],
     };
+    const mappedTitle = (num) => {
+      switch (num) {
+        case 0: {
+          return 'Отчет по выполненным заказам'
+        }
+        case 1: {
+          return 'Отчет по завершеным заказам'
+        }
+        case 2: {
+          return 'Отчет по текущим заказам'
+        }
+      }
+    }
     const convertedData = reportData.reduce((acc, item) => {
       const row = mapped.fields.map((field) => {
         if (field === 'client' || field === 'sotrudnik') {
@@ -171,7 +184,7 @@ const OrdersLayout = () => {
         return item[field];
       });
       return [...acc, row]
-    }, [mapped.headers])
+    }, [[mappedTitle(alignment)], mapped.headers])
     return convertedData;
   }
   
@@ -179,9 +192,23 @@ const OrdersLayout = () => {
     const data = convertToExport(filtered)
     const wb = XLSX.utils.book_new()
     const ws =  XLSX.utils.aoa_to_sheet(data);
-   
+    const merges = [{ e: { c: 6, r: 0}, s: { c: 0, r: 0}}];
+    ws['!merges'] = merges;
+    const mappedTitle = (num) => {
+      switch (num) {
+        case 0: {
+          return 'Отчет по выполненным заказам'
+        }
+        case 1: {
+          return 'Отчет по завершеным заказам'
+        }
+        case 2: {
+          return 'Отчет по текущим заказам'
+        }
+      }
+    }
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'Report.xlsx');
+    XLSX.writeFile(wb, `${mappedTitle(alignment)}.xlsx`);
   }
 
   // useEffect(() => {
