@@ -2,15 +2,12 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import DataTable from '../components/DataTable';
-import Avatar from '@mui/material/Avatar';
 import { employeesAdd } from '../reducers/employeeReducer';
 import routes from '../routes';
+import { TextField } from '@material-ui/core';
 import Box from '@mui/material/Box';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import IconButton from '@mui/material/IconButton';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import GroupIcon from '@mui/icons-material/Group';
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
@@ -18,11 +15,9 @@ import UpdateStatus from './UpdateStatus';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import  * as XLSX from 'xlsx'
 import { Chip } from '@material-ui/core';
-import { ordersAdd } from '../reducers/ordersReducer';
 import { openDialog } from '../reducers/uiReducer';
 import { sendData } from '../reducers/uiReducer';
-import format from 'date-fns/format';
-
+import { format, startOfMonth, lastDayOfMonth, isWithinInterval, compareDesc} from  'date-fns';
 
 
 const columns = [
@@ -177,6 +172,9 @@ const OrdersLayout = () => {
         case 3: {
           return 'Отчет по отмененным заказам'
         }
+        default: {
+          return 'Отчет по всем заказам'
+        }
       }
     }
     const convertedData = reportData.reduce((acc, item) => {
@@ -214,25 +212,41 @@ const OrdersLayout = () => {
         case 3: {
           return 'Отчет по отмененным заказам'
         }
+        default: {
+          return 'Отчет по всем заказам'
+        }
       }
     }
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, `${mappedTitle(alignment)}.xlsx`);
   }
+  const [dateStart, setDateStart] = React.useState(format(startOfMonth(new Date()), 'yyyy-MM-dd'));
+  const [dateEnd, setDateEnd] = React.useState(format(lastDayOfMonth(new Date()), 'yyyy-MM-dd'));
+    const handleChangeStart = (event) => {
+      if (compareDesc(new Date(dateEnd), new Date(event.target.value)) === 1) {
+        return;
+      }
+      setDateStart(event.target.value);
+    };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {   
-  //       const response = await axios.get(routes('getOrders'));    
-  //       dispatch(ordersAdd(response.data));
-  //     } catch(err) {    
-  //       console.log(err);
-  //     }
-  //   }
-  //  fetchData();
-  // }, []);
+    const handleChangeEnd = (event) => {
+      if (compareDesc(new Date(dateStart), new Date(event.target.value)) === -1) {
+        return;
+      }
+      setDateEnd(event.target.value);
+    };
+    const filterDate = (inputData, dateStart, dateEnd) => {
+      const start = new Date(dateStart);
+      const end = new Date(dateEnd);
+      const filtered = inputData.filter((item) => {
+        const orderDate = new Date(item.orderDate);
+        return isWithinInterval(orderDate, { start, end })
+      });
+      return filtered;
+    }
   return (
     <>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between'}}>
       <Box sx={{ display: 'flex', mb: 2}}>
         <ToggleButtonGroup
           color="secondary"
@@ -249,9 +263,28 @@ const OrdersLayout = () => {
 
         <FormControlLabel control={<Checkbox color='secondary' sx={{ml: 2}} onChange={() => setChecked(!checked)} />}  label="Только фотографы" />
       </Box>
+      <Box sx={{ display: 'flex', mb: 2}}>
+        <TextField
+          type="date"
+          variant="outlined"
+          defaultValue={dateStart}
+          label="Начало периода"
+          value={dateStart}
+          onChange={handleChangeStart}
+        />
+        <TextField
+          type="date"
+          variant="outlined"
+          defaultValue={dateEnd}
+          label="Конец периода"
+          value={dateEnd}
+          onChange={handleChangeEnd}
+        />
+        </Box>
+        </Box>  
       <DataTable
         columns={columns}
-        rows={filtered}
+        rows={filterDate(filtered, dateStart, dateEnd)}
         onRowDoubleClick={(params) => {
           dispatch(openDialog('status'))
           dispatch(sendData({id: params.row.id }))

@@ -24,6 +24,7 @@ import { openDialog } from '../reducers/uiReducer';
 export default function ButtonAppBar() {
   const navigate = useNavigate()
   const auth = useSelector(state => state.auth);
+  const roles = auth.isAuth && auth.user.roles.map(({name}) => (name))
   const basket = useSelector(state => state.basket);
   const dispatch = useDispatch();
 
@@ -42,7 +43,7 @@ export default function ButtonAppBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
+        <IconButton
             size="large"
             edge="start"
             color="inherit"

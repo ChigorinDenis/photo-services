@@ -2,20 +2,12 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import DataTable from '../components/DataTable';
-import Avatar from '@mui/material/Avatar';
 import AddDiscount from './AddDiscount';
 import routes from '../routes';
 import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import GroupIcon from '@mui/icons-material/Group';
-import Button from '@mui/material/Button';
-import ToggleButton from '@mui/material/ToggleButton';
-import { Chip } from '@material-ui/core';
 import { clientsAdd } from '../reducers/clientsReducer';
 import ChartLayout from './ChartLayout';
-import format from 'date-fns/format';
+
 
 
 

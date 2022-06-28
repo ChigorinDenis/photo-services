@@ -1,11 +1,9 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import CssBaseline from '@mui/material/CssBaseline';
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Toolbar from '@mui/material/Toolbar';
 import Paper from '@mui/material/Paper';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -16,6 +14,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AddressForm from './AddressForm';
 import PaymentForm from './PaymentForm';
 import Review from './Review';
+import routes from '../../routes';
 
 
 const steps = ['Вид услуги', 'Время записи'];
@@ -27,9 +26,10 @@ export default function Checkout() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [fotosession, setFotosession ] = React.useState({grafiks: []})
   const { selectedEmployee } = useSelector(state => state.ui)
-  const { user } = useSelector(state => state.auth);
+  const { user, isAuth } = useSelector(state => state.auth);
   const clients = useSelector((state) => state.client);
-  const client = clients.find((f) => f.username === user?.username)
+  const client = clients.find((f) => f.username === user?.username);
+  const navigate = useNavigate();
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -40,14 +40,19 @@ export default function Checkout() {
   };
 
   const handleAddOrder = async () => {
+    if (!isAuth) {
+      navigate('/login');
+      return;
+    }
     const order = {
       id_sotr: selectedEmployee.id,
       id_client: client.id,
       id_usl: fotosession.id_usl,
       grafiks: fotosession.grafiks.map((id) => ({id}))
     }
+    
     try {
-      const response = await axios.post(`http://localhost:8080/client/add-to-photograph`, order);
+      const response = await axios.post(routes('addOrderToPhotograph'), order);
       alert('заказ размещен')
     } catch (error) {
       console.log(error)

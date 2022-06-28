@@ -9,6 +9,7 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import  * as XLSX from 'xlsx'
+import { host } from '../routes';
 
 
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -146,38 +147,39 @@ const convertToExport = (reportName, reportData) => {
 
 const mapURL = {
   mostService: {
-    url: 'http://localhost:8080/admin/get-statistic-by-uslugi',
-    urlFile: 'http://localhost:8080/admin/print-statistic-by-uslugi',
-    date: false,
+    url: (dateStart, dateEnd) => (`${host}/admin/get-statistic-by-uslugi/${dateStart}/${dateEnd}`),
+    urlFile: (dateStart, dateEnd) => (`${host}/admin/print-statistic-by-uslugi/${dateStart}/${dateEnd}`),
+    date: true,
     columns: mostServiceColumns,
     title: 'Отчет по наиболее востребованным услугам'
   },
   freqClient: {
-    url: 'http://localhost:8080/admin/get-statistic-by-clients',
-    urlFile: 'http://localhost:8080/admin/print-get-statistic-by-clients',
+    url: (dateStart, dateEnd) => (`${host}/admin/get-statistic-by-clients/${dateStart}/${dateEnd}`),
+    urlFile: (dateStart, dateEnd) => (`${host}/admin/print-get-statistic-by-clients/${dateStart}/${dateEnd}`),
     columns: freqClientColumns,
-    date: false,
+    date: true,
     title: 'Отчет по частоте обращения клиентов, последние заказы'
   },
   currentIncome: {
-    url: 'http://localhost:8080/admin/usluga/statistic-by-year/2022',
-    urlFile: 'http://localhost:8080/admin/usluga/print-statistic-by-year/2022',
+    url: `${host}/admin/usluga/statistic-by-year/2022`,
+    urlFile: `${host}/admin/usluga/print-statistic-by-year/2022`,
     columns: currentIncomeColumns,
     date: false,
     title: 'Отчет по доходу фотосалона за текущий год'
   },
   servicesByDate: {
-    url: (dateStart, dateEnd) => (`http://localhost:8080/admin/usluga/statistic-by-date/${dateStart}/${dateEnd}`),
-    urlFile: (dateStart, dateEnd) => (`http://localhost:8080/admin/usluga/print-statistic-by-date/${dateStart}/${dateEnd}`),
+    url: (dateStart, dateEnd) => (`${host}/admin/usluga/statistic-by-date/${dateStart}/${dateEnd}`),
+    urlFile: (dateStart, dateEnd) => (`${host}/admin/usluga/print-statistic-by-date/${dateStart}/${dateEnd}`),
     columns:  servicesByDateColumns,
     date: true,
     title: 'Отчет оказанным услугам за опледеленный период'
   },
   salary: {
-    url: (dateStart, dateEnd) => (`http://localhost:8080/admin/get-zarplata-table/${dateStart}/${dateEnd}`),
-    urlFile: (dateStart, dateEnd) => (`http://localhost:8080/admin/print-zarplata-table/${dateStart}/${dateEnd}`),
+    url: (dateStart, dateEnd) => (`${host}/admin/get-zarplata-table/${dateStart}/${dateEnd}`),
+    urlFile: (dateStart, dateEnd) => (`${host}/admin/print-zarplata-table/${dateStart}/${dateEnd}`),
     columns:  salaryColumns,
     date: true,
+    title: 'Отчет по ЗП'
   },
   incomeExpense: {
     url: (dateStart, dateEnd) => (routes('getIncomeExpense')(dateStart, dateEnd)),
@@ -187,16 +189,17 @@ const mapURL = {
     title: 'Доходы и расходы фотосалона'
   },
   materials: {
-    url: (dateStart, dateEnd) =>  (`http://localhost:8080/admin/get-consumption-between-dates/${dateStart}/${dateEnd}`),
-    urlFile: (dateStart, dateEnd) =>  (`http://localhost:8080/admin/print-consumption-between-dates/${dateStart}/${dateEnd}`),
+    url: (dateStart, dateEnd) =>  (`${host}/admin/get-consumption-between-dates/${dateStart}/${dateEnd}`),
+    urlFile: (dateStart, dateEnd) =>  (`${host}/admin/print-consumption-between-dates/${dateStart}/${dateEnd}`),
     columns: materialsColumn,
     date: true,
     title: 'Отчет по расходу и остатку материалов'
   },
   discount: {
-    url: 'http://localhost:8080/admin/get-client-skidka-usluga-sotrudnik',
+    url: (dateStart, dateEnd) => (`${host}/admin/get-client-skidka-usluga-sotrudnik/${dateStart}/${dateEnd}`),
+    urlFile: (dateStart, dateEnd) => (`${host}/admin/print-client-skidka-usluga-sotrudnik/${dateStart}/${dateEnd}`),
     columns: discountColumn,
-    date: false,
+    date: true,
     title: 'Отчет по скидкам'
   }
 }
@@ -226,12 +229,11 @@ const StatisticLayout = () => {
     else {
       urlFile = setting.urlFile;
     }
-    // const url = routes('getIncomeExpenseExcel')(format(dateStart, 'yyyy-MM-dd'), format(dateEnd, 'yyyy-MM-dd'));
-    // const url = 'http://localhost:8080/admin/get-consumption-between-dates/2022-06-13/2022-06-20'
+    const method = name === 'discount' ? 'GET' : 'POST';
     try {
       axios({
         url: urlFile,
-        method: 'POST',
+        method,
         responseType: 'blob', // Important
       }).then(({ data: blob}) => {
         const url = URL.createObjectURL(blob);
@@ -245,8 +247,7 @@ const StatisticLayout = () => {
     }
   }
   const ExportButton = () => {
-    const handleExcel = name === 'discount' ? handleOnExport : handleOnServerExport;
-    return <Button variant='contained' startIcon={<GetAppIcon />} color='secondary' size='small' onClick={handleExcel}>Экспорт</Button>
+    return <Button variant='contained' startIcon={<GetAppIcon />} color='secondary' size='small' onClick={handleOnServerExport}>Экспорт</Button>
   }
   const handleChange = (event) => {
     setRows([])
@@ -332,17 +333,7 @@ const StatisticLayout = () => {
       </LocalizationProvider>
     )
   }
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {   
-  //       const response = await axios.get('http://localhost:8080/admin/get-statistic-by-uslugi');    
-  //       console.log(response.data)
-  //     } catch(err) {    
-  //       console.log(err);
-  //     }
-  //   }
-  //  fetchData();
-  // }, []);
+
   return (
     <>
       <SelectStatisticBlock />

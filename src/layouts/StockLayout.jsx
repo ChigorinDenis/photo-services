@@ -12,6 +12,7 @@ import  * as XLSX from 'xlsx'
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import { Button, Typography } from '@mui/material';
 import ChartLayout from './ChartLayout';
+import { host } from '../routes';
 
 const columns = [
   { field: 'name', headerName: 'Название', width: 150 },
@@ -69,7 +70,7 @@ const StockLayout = () => {
   React.useEffect(() => {
     const fetchData = async () => {
       try {   
-        const response = await axios.get('http://localhost:8080/statistik/get-statik');
+        const response = await axios.get(`${host}/statistik/get-statik`);
         setPlanningStock(response.data);
       } catch(err) {    
         console.log(err);

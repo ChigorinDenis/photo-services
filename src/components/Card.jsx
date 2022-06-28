@@ -26,7 +26,7 @@ export default function MediaCard({ card, discount, isAction = true }) {
         component="img"
         height="140"
         image={file}
-        alt="green iguana"
+        alt="text"
       />
       <CardContent>
         <Typography gutterBottom variant="h6" component="div">

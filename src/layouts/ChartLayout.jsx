@@ -23,14 +23,9 @@ import groupby from 'lodash.groupby';
 import countBy from 'lodash.countby';
 import uniq from "lodash.uniq";
 import Box from '@mui/material/Box';
-import { format, getMonth, startOfMonth, lastDayOfMonth, isWithinInterval} from  'date-fns';
+import { format, startOfMonth, lastDayOfMonth, isWithinInterval} from  'date-fns';
 import randomColor from 'random-material-color';
 import routes from '../routes';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import {  id, ru } from 'date-fns/locale'
 import { TextField } from '@material-ui/core';
 
 ChartJS.register(
@@ -237,8 +232,9 @@ function ChartLayout(props) {
 
   useEffect(() => {
     const fetchData = async () => {
+      const url = routes('getConsumption')(dateStart, dateEnd, idMaterial);
       try {   
-        const response= await axios.get(`http://localhost:8080/admin/get-consumption-between-dates-for-one/${dateStart}/${dateEnd}/${idMaterial}`);
+        const response= await axios.get(url);
         const counted = response.data
           .reduce((acc, item) => {
             acc.labels.push(item.date.slice(0,5));

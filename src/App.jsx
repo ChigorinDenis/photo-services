@@ -10,10 +10,10 @@ import Photosession from './pages/Photosession';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import Header from './components/Header';
+import ClientOrders from './pages/ClientOrders';
 import routes from './routes'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { serviceAllAdd } from './reducers/serviceReducer';
-
 
 const theme = createTheme({
   palette: {
@@ -54,6 +54,7 @@ export default () => {
         <Route path='/login' element={<SignIn />}></Route>
         <Route path='/registration' element={<SignUp />}></Route>
         <Route path='/photosession' element={<Photosession />}></Route>
+        <Route path='/myorders' element={<ClientOrders />}></Route>
         <Route
           path="*"
           element={<Navigate to="/" replace />}

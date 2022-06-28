@@ -22,6 +22,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import FeaturedPost from "../components/FeaturedPost";
 import OrdersLayout from "../layouts/OrdersLayout";
 import { Typography } from "@mui/material";
+import { host } from '../routes'
 
 const post = [
   {
@@ -55,7 +56,7 @@ const handleOnEmail = (row) => () => {
   }
   
   try {
-    const response = axios.post('http://localhost:8080/sotrudnik/send-email', data);
+    const response = axios.post(`${host}/sotrudnik/send-email`, data);
     alert('Письмо отправлено');
   }
   catch(err) {
@@ -134,7 +135,14 @@ const columns = [
             color: '#9575cd'
           },
           text: 'Выполнено'
-        }
+        },
+        CANCELED: {
+          style: {
+            borderColor: '#ef5350', 
+            color: '#ef5350'
+          },
+          text: 'Отменено'
+        },
       }
       const { status } = params.row;
       return <Chip label={mappingStatus[status].text}   style={mappingStatus[status].style} variant="outlined" size='small' />
@@ -155,7 +163,7 @@ const PhotographerPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseSotr = await axios.get(`http://localhost:8080/admin/sotrudnik/by-username/${user?.username}`);
+        const responseSotr = await axios.get(`${host}/admin/sotrudnik/by-username/${user?.username}`);
         setSotrudnik(responseSotr.data);
         const response = await axios.get(routes('getOrdersPhotosession')(responseSotr.data.id)); 
         // const filtered = response.data.filter((f) => (f.sotrudnik.id === responseSotr.data.id))  

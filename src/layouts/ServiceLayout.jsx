@@ -53,7 +53,7 @@ const ServiceLayout = () => {
 
     const handleRowClick = async (params) => {
       const { id } = params.row;
-      const url = `http://localhost:8080/sotrudnik/get-rashodniki-by-usluga/${id}`
+      const url = routes('getMaterialsByService')(id);
       try {   
         const response = await axios.get(url); 
         dispatch(setMaterials(response.data))

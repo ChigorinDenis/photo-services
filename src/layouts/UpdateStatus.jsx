@@ -16,6 +16,7 @@ import Container from '@mui/material/Container';
 import routes from '../routes';
 import { statusUpdate } from '../reducers/ordersReducer';
 import { closeDialog } from '../reducers/uiReducer'
+import { host } from '../routes'
 
 
 function UpdateStatus(props) {
@@ -35,8 +36,8 @@ function UpdateStatus(props) {
   const handleSubmit = async (event) => {
     const { dialogsData } = ui;
     event.preventDefault();
-    const urlUpdate = `http://localhost:8080/client/update-zakaz-status/${dialogsData.id}/${status}`;
-    const urlCancel = `http://localhost:8080/admin/set-cancel-status-zakaz/${dialogsData.id}`
+    const urlUpdate = `${host}/client/update-zakaz-status/${dialogsData.id}/${status}`;
+    const urlCancel = `${host}/admin/set-cancel-status-zakaz/${dialogsData.id}`
     const url = status === 'CANCELED' ? urlCancel : urlUpdate;
 
     try {   

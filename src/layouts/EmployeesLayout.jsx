@@ -11,17 +11,11 @@ import IconButton from '@mui/material/IconButton';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ToggleButton from '@mui/material/ToggleButton';
 import AddSheduleForm from './AddSheduleForm';
-import Datepicker from '../components/Datepicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { openDialog } from '../reducers/uiReducer';
 import { selectEmployee } from '../reducers/uiReducer';
-import { sheduleAdd } from '../reducers/sheduleReducer';
 import groupBy from 'lodash.groupby';
 import { format, add} from 'date-fns';
-import { TextField } from '@mui/material';
-
-
+import { host } from '../routes';
 
 
 
@@ -32,7 +26,7 @@ const columnsInfo = [
       <>
         <Avatar
           alt={params.row.username}
-          src={`http://localhost:8080${params.row.avatarImagePath}`}
+          src={`${host}${params.row.avatarImagePath}`}
           sx={{mr:2}}
         />
         <span>{params.row.username}</span>
@@ -115,7 +109,7 @@ const EmployeesLayout = () => {
         <>
           <Avatar
             alt={params.row.username}
-            src={`http://localhost:8080${params.row.avatarImagePath}`}
+            src={`${host}${params.row.avatarImagePath}`}
             sx={{mr:2}}
           />
           <span>{params.row.username}</span>

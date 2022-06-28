@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -12,6 +13,7 @@ import { logOut } from '../reducers/authReducer';
 
 const AccountMenu = ({open, handleClose, anchorEl}) => {
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   return (
     <Menu
@@ -53,12 +55,13 @@ const AccountMenu = ({open, handleClose, anchorEl}) => {
           <Avatar /> Профиль
         </MenuItem>
         <Divider />
-        <MenuItem>
+        {user?.roles?.length === 0 && <MenuItem onClick={() => {navigate('/myorders')}}>
           <ListItemIcon>
             <PlaylistAddCheckIcon  fontSize="small" />
           </ListItemIcon>
           Мои Заказы
         </MenuItem>
+        }
         <MenuItem 
           onClick={() => {
             dispatch(logOut());

@@ -2,35 +2,23 @@ import React, { useEffect } from "react";
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
-import DataTable from '../components/DataTable';
-import Avatar from '@mui/material/Avatar';
-import { employeesAdd } from '../reducers/employeeReducer';
 import routes from '../routes';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import GroupIcon from '@mui/icons-material/Group';
 import Button from '@mui/material/Button';
-import ToggleButton from '@mui/material/ToggleButton';
-import UpdateStatus from '../layouts/UpdateStatus'
 import Chip from '@mui/material/Chip';
-import { ordersAdd } from '../reducers/ordersReducer';
-import { openDialog } from '../reducers/uiReducer';
-import { sendData } from '../reducers/uiReducer';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import TextField from '@mui/material/TextField';
 import { format, addHours } from 'date-fns';
 import {  ru } from 'date-fns/locale'
 import Grid from '@mui/material/Grid';
 import Container from "@material-ui/core/Container";
-import EmailIcon from '@mui/icons-material/Email';
 import FeaturedPost from "../components/FeaturedPost";
-import OrdersLayout from "../layouts/OrdersLayout";
 import Card from '../components/Card'
 import { Stack, Typography } from "@mui/material";
+import { selectEmployee } from "../reducers/uiReducer";
+
 
 const featuredPosts = 
   {
@@ -47,6 +35,7 @@ const Photosession = () => {
     .map((item) => ({...item, ...featuredPosts, title: `Фотограф ${item.fio}`}));
   const { selectedService, selectedEmployee } = useSelector(state => state.ui)
   const { isAuth, user } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [value, setValue] = React.useState(new Date());
@@ -62,9 +51,10 @@ const Photosession = () => {
   }
 
   const handleGetTime = async () => {
-    const tommorow = new Date(value.getFullYear(), value.getMonth(), value.getDate() + 1)
+    const tommorow = new Date(value.getFullYear(), value.getMonth(), value.getDate() + 1);
+    const url = routes('getShedulesBetweenDates')(selectedEmployee.id, format(value, 'dd.MM.yyyy'), format(tommorow, 'dd.MM.yyyy'));
     try {
-      const response = await axios.get(`http://localhost:8080/admin/sotrudnik/${selectedEmployee.id}/get-grafik/from/${format(value, 'dd.MM.yyyy')}/to/${format(tommorow, 'dd.MM.yyyy')}`);
+      const response = await axios.get(url);
       const times =  response.data.map((item) => {
         const startDate = new Date(item.data)
         const endDate =  addHours(startDate, 1);
@@ -91,8 +81,9 @@ const Photosession = () => {
       id_usl: selectedService.id,
       grafiks: grafiks.map((id) => ({id}))
     }
+    const url = routes('addOrderToPhotograph');
     try {
-      const response = await axios.post(`http://localhost:8080/client/add-to-photograph`, order);
+      const response = await axios.post(url, order);
       setTimes([]);
       setGrafiks([]);
       alert('заказ размещен');
@@ -111,7 +102,10 @@ const Photosession = () => {
             <FeaturedPost key={post.id} post={post}/>
           ))}
       </Grid>}
-      {selectedEmployee?.id && <FeaturedPost post={selectedEmployee}  portfolio={false} />}
+      {selectedEmployee?.id && <>
+        <FeaturedPost post={selectedEmployee}  portfolio={false} />
+        <Button variant='text' onClick={() => { dispatch(selectEmployee({}))}} color="error">Отмена</Button>
+      </>}
       <Typography component="h1" variant="h6" color="inherit" gutterBottom sx={{ mt: 5, mb: 2}}>3. Выберите дату и время</Typography>
       <Box sx={{
         display: 'flex',

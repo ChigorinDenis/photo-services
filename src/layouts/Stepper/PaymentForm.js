@@ -1,19 +1,23 @@
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import { Box, Chip } from '@material-ui/core';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { format, addHours } from 'date-fns';
 import {  ru } from 'date-fns/locale'
+import routes from '../../routes';
 
 
 export default function PaymentForm(props) {
   const [value, setValue] = React.useState(new Date());
   const [times, setTimes] = React.useState([]);
+  const { selectedEmployee } = useSelector(state => state.ui);
  
   const { fotosession, setFotosession } = props;
   const handleAddGrafiks = (id) => {
@@ -33,8 +37,9 @@ export default function PaymentForm(props) {
   
   const handleGetTime = async () => {
     const tommorow = new Date(value.getFullYear(), value.getMonth(), value.getDate() + 1)
+    const url = routes('getShedulesBetweenDates')(selectedEmployee.id, format(value, 'dd.MM.yyyy'), format(tommorow, 'dd.MM.yyyy'));
     try {
-      const response = await axios.get(`http://localhost:8080/admin/sotrudnik/7/get-grafik/from/${format(value, 'dd.MM.yyyy')}/to/${format(tommorow, 'dd.MM.yyyy')}`);
+      const response = await axios.get(url);
       const times =  response.data.map((item) => {
         const startDate = new Date(item.data)
         const endDate =  addHours(startDate, 1);
@@ -83,12 +88,13 @@ export default function PaymentForm(props) {
               sx={{
                 display: 'flex',
                 flexWrap: 'wrap',
-                gap: 10,
+                gap: 2,
                 mt:3
               }}>
                 {times.map(({id, time, type}) => {
                   return (
                     <Chip
+                      key={id}
                       label={time}
                       color={fotosession.grafiks.includes(id) ? "secondary": "primary"}
                       disabled={type === 'BUSY'}

@@ -61,8 +61,9 @@ function AddDiscount(props) {
       id_sotr: user.id,
       id_uslugi: status
     };
+    const url = routes('getDiscount');
     try {   
-      const response = await axios.post(`http://localhost:8080/sotrudnik/skidka/add`, discount);
+      const response = await axios.post(url, discount);
       dispatch(discountOneAdd(response.data));
       alert('скидка добавлена');
 

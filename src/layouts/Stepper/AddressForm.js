@@ -1,14 +1,11 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { Button, CardActionArea, CardActions } from '@mui/material';
+import { Button, CardActions } from '@mui/material';
 
 export default function AddressForm(props) {
   const [ type, setType ] = React.useState('');
@@ -24,7 +21,7 @@ export default function AddressForm(props) {
               <CardMedia
                 component="img"
                 height="140"
-                image="https://renty.ua/wp-content/uploads/2018/10/cover10.png"
+                image="/img/instudio.png"
                 alt="Фотосессия в студии"
               />
               <CardContent>
@@ -58,7 +55,7 @@ export default function AddressForm(props) {
               <CardMedia
                 component="img"
                 height="140"
-                image="https://alimentola.info/uploads/posts/2021-03/1615551811_63-p-viezdnaya-fotosessiya-63.jpg"
+                image="/img/viezd.jpg"
                 alt="Выездная фотосессия"
               />
               <CardContent>
