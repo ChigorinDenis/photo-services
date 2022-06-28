@@ -1,5 +1,5 @@
 // export const host = 'http://localhost:8080';
-export const host = 'http://185.123.43.20:8080';
+export const host = 'https://185.123.43.20:8080';
 const prefix = 'constructor';
 
 export default (name) => {
