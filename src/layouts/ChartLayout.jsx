@@ -22,6 +22,7 @@ import { Bar, Line, Pie } from 'react-chartjs-2';
 import groupby from 'lodash.groupby';
 import countBy from 'lodash.countby';
 import uniq from "lodash.uniq";
+import Box from '@mui/material/Box';
 import { format, getMonth, startOfMonth, lastDayOfMonth, isWithinInterval} from  'date-fns';
 import randomColor from 'random-material-color';
 import routes from '../routes';
@@ -176,6 +177,22 @@ const countIncomeExpense = (inputData) => {
     return <Bar data={data} options={options} />
 }
 
+const countMaterial = (materials) => {
+  const data = {
+    labels: materials.labels,
+    datasets: [
+      {
+        label: 'Расходник',
+        data: materials.totals,
+        borderColor: 'rgb(53, 162, 235)',
+        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      },
+    ],
+  };
+  const options = getOptions('Диаграмма расходных материалов',5)
+  return <Line data={data} options={options} />
+}
+
 const filterDate = (inputData, dateStart, dateEnd) => {
   const start = new Date(dateStart);
   const end = new Date(dateEnd);
@@ -189,10 +206,12 @@ const filterDate = (inputData, dateStart, dateEnd) => {
 function ChartLayout(props) {
   const {
     type,
-    dataIncome
+    dataIncome,
+    dataStock
   } = props;
 
-  const [incomeExpense, setIncomeExpense] = React.useState([]);
+  const [materials, setMaterials] = React.useState([]);
+  const [idMaterial, setIdMaterial] = React.useState(1);
   const [idService, setIdService] = React.useState(1);
   const [dateStart, setDateStart] = React.useState(format(startOfMonth(new Date()), 'yyyy-MM-dd'));
   const [dateEnd, setDateEnd] = React.useState(format(lastDayOfMonth(new Date()), 'yyyy-MM-dd'));
@@ -201,6 +220,10 @@ function ChartLayout(props) {
 
   const handleChange = (event) => {
     setIdService(event.target.value);
+  };
+
+  const handleChangeId = (event) => {
+    setIdMaterial(event.target.value);
   };
 
   const handleChangeStart = (event) => {
@@ -212,30 +235,27 @@ function ChartLayout(props) {
   };
 
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {   
-  //       const response= await axios.get(routes('getIncomeExpense'));
-  //       const counted = response.data
-  //         .reduce((acc, item) => {
-  //           acc.labels.push(item.date.slice(0, 5));
-  //           acc.incomes.push(item.income)
-  //           acc.expenses.push(item.expense);
-  //           return acc;
-  //         }, { labels: [], incomes: [], expenses: []})
-  //         console.log(counted)  
-  //         setIncomeExpense(counted);
-  //     } catch(err) {    
-  //       console.log(err);
-  //     }
-  //   }
-  //  fetchData();
-  // }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {   
+        const response= await axios.get(`http://localhost:8080/admin/get-consumption-between-dates-for-one/${dateStart}/${dateEnd}/${idMaterial}`);
+        const counted = response.data
+          .reduce((acc, item) => {
+            acc.labels.push(item.date.slice(0,5));
+            acc.totals.push(item.total)
+            return acc;
+          }, { labels: [], totals: []})
+          setMaterials(counted);
+      } catch(err) {    
+        console.log(err);
+      }
+    }
+   fetchData();
+  }, [dateStart, dateEnd, idMaterial]);
 
   const orders = useSelector(state => state.order);
   const services = useSelector(state => state.service);
-  //filterDate(orders, '2022-06-20', '2022-06-26');
-  console.log(dateStart)
+ 
   return (
     <>
       {type ==='service' && 
@@ -300,6 +320,43 @@ function ChartLayout(props) {
         </Paper>
       }
       {type === 'income' && countIncomeExpense(dataIncome)}
+      {type === 'material' &&
+      <Paper>
+        {countMaterial(materials)}
+        <Box sx={{display: 'flex', justifyContent: 'space-around'}}>
+            <TextField
+              type="date"
+              variant="outlined"
+              defaultValue={dateStart}
+              label="Начало периода"
+              value={dateStart}
+              onChange={handleChangeStart}
+            />
+            <TextField
+              type="date"
+              variant="outlined"
+              defaultValue={dateEnd}
+              label="Конец периода"
+              value={dateEnd}
+              onChange={handleChangeEnd}
+            />
+            <FormControl sx={{ width: '30%'}} size="small">
+            <InputLabel>Выбрать статистику</InputLabel>
+            <Select
+              value={idMaterial}
+              label="Выбрать статистику" 
+              size="small"
+              onChange={handleChangeId}
+            >
+            
+              {dataStock.map(({ id, name, type }) => (
+                <MenuItem value={id}>{`${name} ${type}`}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          </Box>
+      </Paper>
+      }
     </>
   )
 }

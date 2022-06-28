@@ -83,7 +83,15 @@ const materialsColumn = [
   { field: 'name', headerName: 'Название', width: 300},
   { field: 'type', headerName: 'Тип', width: 300},
   { field: 'number', headerName: 'Расход материалов', width: 300},
-  { field: 'units', headerName: 'Ед.изм.', width: 300}
+  { field: 'total', headerName: 'Ед.изм.', width: 300}
+]
+
+const discountColumn = [
+  { field: 'fio', headerName: 'Клиент', width: 300},
+  { field: 'usluga', headerName: 'Услуга', width: 300},
+  { field: 'skidka', headerName: 'Скидка', width: 300},
+  { field: 'total', headerName: 'Цена со скидкой.', width: 300},
+  { field: 'sotrudnik', headerName: 'Сотрудник', width: 300}
 ]
 
 const convertToExport = (reportName, reportData) => {
@@ -123,6 +131,10 @@ const convertToExport = (reportName, reportData) => {
       fields: ['name', 'type', 'number', 'units'],
       
     },
+    discount: {
+      headers: ['Клиент', 'Услуга', 'Скидка', 'Цена со скидкой', 'Сотрудник'],
+      fields: ['fio', 'usluga', 'skidka', 'total', 'sotrudnik'],
+    }
   }
   const mapped = mapConvert[reportName]
   const convertedData = reportData.reduce((acc, item) => {
@@ -180,6 +192,12 @@ const mapURL = {
     columns: materialsColumn,
     date: true,
     title: 'Отчет по расходу и остатку материалов'
+  },
+  discount: {
+    url: 'http://localhost:8080/admin/get-client-skidka-usluga-sotrudnik',
+    columns: discountColumn,
+    date: false,
+    title: 'Отчет по скидкам'
   }
 }
 
@@ -194,11 +212,11 @@ const StatisticLayout = () => {
   const handleOnExport = () => {
     const data = convertToExport(name, rows)
     const wb = XLSX.utils.book_new()
-    const ws =  XLSX.utils.aoa_to_sheet(data, 'Some headers');
+    const ws =  XLSX.utils.aoa_to_sheet([[setting.title], ...data], 'Some headers');
     const merges = [{ e: { c: 5, r: 0}, s: { c: 0, r: 0}}];
     ws['!merges'] = merges;
     XLSX.utils.book_append_sheet(wb, ws, 'Лист1');
-    XLSX.writeFile(wb, 'Report.xlsx');
+    XLSX.writeFile(wb, `${setting.title}.xlsx`);
   }
   const handleOnServerExport =  () => {
     let urlFile;
@@ -227,7 +245,8 @@ const StatisticLayout = () => {
     }
   }
   const ExportButton = () => {
-    return <Button variant='contained' startIcon={<GetAppIcon />} color='secondary' size='small' onClick={handleOnServerExport}>Экспорт</Button>
+    const handleExcel = name === 'discount' ? handleOnExport : handleOnServerExport;
+    return <Button variant='contained' startIcon={<GetAppIcon />} color='secondary' size='small' onClick={handleExcel}>Экспорт</Button>
   }
   const handleChange = (event) => {
     setRows([])
@@ -246,7 +265,7 @@ const StatisticLayout = () => {
     }
     try {   
       const response = await axios.get(url);
-      if (name === 'currentIncome' || name === 'incomeExpense') {
+      if (name === 'currentIncome' || name === 'incomeExpense' || name === 'discount') {
         const statistic = response.data.map((item, id) => ({id, ...item}));
         setRows(statistic);
       }
@@ -280,6 +299,7 @@ const StatisticLayout = () => {
             <MenuItem value={'salary'}>Расчет заработной платы за период</MenuItem>
             <MenuItem value={'materials'}> Отчет по расходу и остатку материалов</MenuItem>
             <MenuItem value={'incomeExpense'}>Доход и расход по дням за период</MenuItem>
+            <MenuItem value={'discount'}> Отчет по скидкам</MenuItem>
           </Select>
         </FormControl>
         {setting.date && <>

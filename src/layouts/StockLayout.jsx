@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import  * as XLSX from 'xlsx'
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import { Button, Typography } from '@mui/material';
+import ChartLayout from './ChartLayout';
 
 const columns = [
   { field: 'name', headerName: 'Название', width: 150 },
@@ -110,19 +111,29 @@ const StockLayout = () => {
           display: 'flex',
           gap: 2,
         }}
-      >
-        <DataTable
-          columns={columns}
-          rows={stock}
-          heightTable={'650px'}
-        />
-       
+      > <Box sx={{width: '60%'}}>
           <DataTable
             columns={columns}
-            rows={calcMaterials(planningStock, alignment)}
-            heightTable={'650px'}
+            rows={stock}
+            heightTable={'100%'}
           />
-      
+       </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+            width: '40%'
+          }}
+        >
+          
+          <DataTable
+              columns={columns}
+              rows={calcMaterials(planningStock, alignment)}
+              heightTable={'300px'}
+          />
+          <ChartLayout type={'material'} dataStock={stock}/>
+        </Box>
       </Box>
     </>
   )

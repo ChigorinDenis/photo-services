@@ -35,8 +35,12 @@ function UpdateStatus(props) {
   const handleSubmit = async (event) => {
     const { dialogsData } = ui;
     event.preventDefault();
+    const urlUpdate = `http://localhost:8080/client/update-zakaz-status/${dialogsData.id}/${status}`;
+    const urlCancel = `http://localhost:8080/admin/set-cancel-status-zakaz/${dialogsData.id}`
+    const url = status === 'CANCELED' ? urlCancel : urlUpdate;
+
     try {   
-      const response = await axios.get(`http://localhost:8080/client/update-zakaz-status/${dialogsData.id}/${status}`);
+      const response = await axios.get(url);
       const { completeDate, issueDate } = response.data;
       dispatch(statusUpdate({ id: dialogsData.id, status, completeDate, issueDate}));  
     } catch(err) {    
@@ -70,6 +74,7 @@ function UpdateStatus(props) {
                 >
                   <MenuItem value={'COMPLETE'}>Завершено</MenuItem>
                   <MenuItem value={'ISSUED'}>Выполнено</MenuItem>
+                  <MenuItem value={'CANCELED'}>Отменено</MenuItem>
                 </Select>
             </FormControl>
               </Grid>              

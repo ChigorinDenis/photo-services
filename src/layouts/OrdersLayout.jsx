@@ -140,6 +140,9 @@ const OrdersLayout = () => {
         if (alignment === 2) {
           return f.status === 'CREATED'
         }
+        if (alignment === 3) {
+          return f.status === 'CANCELED'
+        }
         return true;
       })
       .filter((f) => {
@@ -170,6 +173,9 @@ const OrdersLayout = () => {
         }
         case 2: {
           return 'Отчет по текущим заказам'
+        }
+        case 3: {
+          return 'Отчет по отмененным заказам'
         }
       }
     }
@@ -205,6 +211,9 @@ const OrdersLayout = () => {
         case 2: {
           return 'Отчет по текущим заказам'
         }
+        case 3: {
+          return 'Отчет по отмененным заказам'
+        }
       }
     }
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
@@ -235,6 +244,7 @@ const OrdersLayout = () => {
           <ToggleButton value={0}>Выполненные</ToggleButton>
           <ToggleButton value={1}>Завершенные</ToggleButton>
           <ToggleButton value={2}>Текущие</ToggleButton>
+          <ToggleButton value={3}>Отмененные</ToggleButton>
         </ToggleButtonGroup>
 
         <FormControlLabel control={<Checkbox color='secondary' sx={{ml: 2}} onChange={() => setChecked(!checked)} />}  label="Только фотографы" />
